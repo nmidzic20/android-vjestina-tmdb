@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -33,34 +34,32 @@ fun UserScoreProgressBar(userScore: UserScore, modifier: Modifier = Modifier) {
     {
         Canvas(
             modifier = Modifier
-                .size(size = 50.dp)
+                .fillMaxSize(1f)
         ) {
             drawArc(
                 color = DarkGreen,
                 0f,
                 360f,
                 useCenter = false,
-                //size = Size(size.width, size.height * 2),
                 style = Stroke(3.dp.toPx(), cap = StrokeCap.Round)
             )
         }
         Canvas(
             modifier = Modifier
-                .size(size = 50.dp)
-                //.border(color = Color.Blue, width = 2.dp, shape = CircleShape)
+                .fillMaxSize(1f)
         ) {
             drawArc(
                 color = Color.Green,
                 -90f,
                 progressPercentage,
                 useCenter = false,
-                //size = Size(size.width, size.height * 2),
                 style = Stroke(3.dp.toPx(), cap = StrokeCap.Round)
             )
         }
         Text(text = userScore.text,
             modifier = Modifier
-                .align(Alignment.Center))
+                .align(Alignment.Center)
+        )
     }
 
 }
@@ -69,5 +68,5 @@ fun UserScoreProgressBar(userScore: UserScore, modifier: Modifier = Modifier) {
 @Composable
 fun UserScoreProgressBarPreview() {
     val userScore = UserScore(7.8f)
-    UserScoreProgressBar(userScore, Modifier)
+    UserScoreProgressBar(userScore, Modifier.size(42.dp))
 }

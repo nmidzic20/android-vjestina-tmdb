@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
@@ -16,9 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import endava.codebase.android.movieapp.mock.MoviesMock
-import endava.codebase.android.movieapp.ui.component.ActorCard
-import endava.codebase.android.movieapp.ui.component.ActorCardViewState
-import endava.codebase.android.movieapp.ui.component.FavoriteButton
+import endava.codebase.android.movieapp.ui.component.*
 import endava.codebase.android.movieapp.ui.theme.MovieAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -27,21 +26,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             MovieAppTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-                    //Greeting("Android")
-                    //FavoriteButton()
-                    //Test()
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colors.background
+                ) {
+                    Greeting("Android")
                 }
             }
         }
     }
-}
-
-@Composable
-fun Test()
-{
-    val count = remember { mutableStateOf(0) }
-    Text(text = count.value.toString(), modifier = Modifier.clickable { count.value += 1 })
 }
 
 @Composable

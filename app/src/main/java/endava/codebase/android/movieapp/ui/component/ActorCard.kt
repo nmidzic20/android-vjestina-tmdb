@@ -1,20 +1,15 @@
 package endava.codebase.android.movieapp.ui.component
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import endava.codebase.android.movieapp.mock.MoviesMock
@@ -35,26 +30,30 @@ fun ActorCard(
         shape = RoundedCornerShape(20 .dp),
         elevation = 10 .dp,
         modifier = modifier
+            .padding(5.dp)
     ) {
         Column() {
             AsyncImage(
                 model = actorCardViewState.imageUrl,
                 contentDescription = actorCardViewState.name,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .fillMaxHeight(0.6f)
             )
             Text(
                 text = actorCardViewState.name,
                 fontSize = 15 .sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .padding(5 .dp))
+                    .padding(2 .dp)
+            )
             Text(
                 text = actorCardViewState.character,
                 fontSize = 12 .sp,
                 color = Gray700,
                 modifier = Modifier
-                    .padding(5 .dp)
+                    .padding(2 .dp)
             )
         }
     }
@@ -66,6 +65,6 @@ private fun ActorCardPreview() {
     val actor = MoviesMock.getActor()
     ActorCard(
         ActorCardViewState(actor.imageUrl!!, actor.name, actor.character),
-        Modifier.size(width = 130 .dp, height = 270 .dp),
+        Modifier.size(width = 125 .dp, height = 209 .dp),
     )
 }

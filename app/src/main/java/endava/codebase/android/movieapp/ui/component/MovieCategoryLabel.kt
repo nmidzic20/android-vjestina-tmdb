@@ -6,11 +6,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -21,8 +19,8 @@ import endava.codebase.android.movieapp.R
 
 data class MovieCategoryLabelViewState(
     val itemId: Int,
-    val isSelected: Boolean,
-    val categoryText: MovieCategoryLabelTextViewState
+    var isSelected: Boolean,
+    val categoryText: MovieCategoryLabelTextViewState,
 )
 
 sealed class MovieCategoryLabelTextViewState {
@@ -30,36 +28,35 @@ sealed class MovieCategoryLabelTextViewState {
     data class TextStringResource (@StringRes val textRes: Int) : MovieCategoryLabelTextViewState()
 }
 
-
-
 @Composable
 fun MovieCategoryLabel(
     movieCategoryLabelViewState: MovieCategoryLabelViewState,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    selectedIndex: Int
+    onClick: (Int) -> Unit,
 ) {
 
     val textContent : String = when(movieCategoryLabelViewState.categoryText) {
-        is MovieCategoryLabelTextViewState.TextString -> movieCategoryLabelViewState.categoryText.text
-        is MovieCategoryLabelTextViewState.TextStringResource -> stringResource(id = movieCategoryLabelViewState.categoryText.textRes)
+        is MovieCategoryLabelTextViewState.TextString ->
+            movieCategoryLabelViewState.categoryText.text
+        is MovieCategoryLabelTextViewState.TextStringResource ->
+            stringResource(id = movieCategoryLabelViewState.categoryText.textRes)
     }
 
     Text(
         text = textContent,
         fontWeight =
-            if (selectedIndex == movieCategoryLabelViewState.itemId)//(movieCategoryLabelViewState.isSelected)
+            if (movieCategoryLabelViewState.isSelected)
                 FontWeight.Bold
             else
                 FontWeight.Normal,
         style =
-            if (selectedIndex == movieCategoryLabelViewState.itemId)//(movieCategoryLabelViewState.isSelected)
+            if (movieCategoryLabelViewState.isSelected)
                 TextStyle(textDecoration = TextDecoration.Underline)
             else
                 TextStyle(textDecoration = TextDecoration.None),
         modifier = modifier
             .padding(5.dp)
-            .clickable { onClick() }
+            .clickable { onClick(movieCategoryLabelViewState.itemId) }
     )
 }
 
@@ -67,33 +64,29 @@ fun MovieCategoryLabel(
 fun MovieCategoryLabelScreen()
 {
     val movieCategoryLabelViewStateList = remember {
-        mutableStateOf(
-            listOf<MovieCategoryLabelViewState>(
-                MovieCategoryLabelViewState(0,false, MovieCategoryLabelTextViewState.TextString("Movies1")),
-                MovieCategoryLabelViewState(1,false, MovieCategoryLabelTextViewState.TextStringResource(
-                    R.string.movie_category)),
-                )
+        mutableStateListOf(
+            MovieCategoryLabelViewState(0,true, MovieCategoryLabelTextViewState.TextString("Movies1")),
+            MovieCategoryLabelViewState(1,false, MovieCategoryLabelTextViewState.TextStringResource(
+                R.string.movie_category)),
         )
     }
-    val selectedIndex = remember {
-        mutableStateOf(
-            movieCategoryLabelViewStateList.value[0].itemId
-        )
+
+    val onClick = { selectedId : Int ->
+        movieCategoryLabelViewStateList.forEach {
+            it.isSelected = it.itemId == selectedId
+        }
     }
-    val onClick = { selectedIndex.value = if (selectedIndex.value == 0) 1 else 0}
 
     Row() {
         MovieCategoryLabel(
-            movieCategoryLabelViewState = movieCategoryLabelViewStateList.value[0],
+            movieCategoryLabelViewState = movieCategoryLabelViewStateList[0],
             Modifier,
             onClick = onClick,
-            selectedIndex.value
         )
         MovieCategoryLabel(
-            movieCategoryLabelViewState = movieCategoryLabelViewStateList.value[1],
+            movieCategoryLabelViewState = movieCategoryLabelViewStateList[1],
             Modifier,
             onClick = onClick,
-            selectedIndex.value
         )
     }
 }
