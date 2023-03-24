@@ -28,10 +28,9 @@ data class MovieCardViewState(
 fun MovieCard(
     movieCardViewState: MovieCardViewState,
     onClick: () -> Unit,
+    onFavoriteClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val isFavorite = remember { mutableStateOf(movieCardViewState.movie.isFavorite) }
-
     Card(
         shape = RoundedCornerShape(MaterialTheme.spacing.medium),
         elevation = MaterialTheme.spacing.small,
@@ -50,8 +49,8 @@ fun MovieCard(
                     .fillMaxWidth()
             )
             FavoriteButton(
-                isFavorite = isFavorite.value,
-                onClick = { isFavorite.value = !isFavorite.value },
+                isFavorite = movieCardViewState.movie.isFavorite,
+                onClick = onFavoriteClick,
                 modifier = Modifier
                     .size(MaterialTheme.spacing.large)
                     .align(Alignment.TopStart)
@@ -65,12 +64,23 @@ fun MovieCard(
 @Composable
 private fun MovieCardPreview() {
     val movieDetails = MoviesMock.getMovieDetails()
-    val movie = movieDetails.movie
+    val movie = remember { mutableStateOf(movieDetails.movie) }
+
     val onClick = { println("Movie card clicked") }
+    val onFavoriteClick = {
+        movie.value = Movie(
+            movie.value.id,
+            movie.value.title,
+            movie.value.overview,
+            movie.value.imageUrl,
+            !movie.value.isFavorite
+        )
+    }
 
     MovieCard(
-        MovieCardViewState(movie),
+        MovieCardViewState(movie.value),
         onClick,
+        onFavoriteClick,
         Modifier
             .size(width = 122.dp, height = 180.dp)
             .padding(MaterialTheme.spacing.extraSmall)
