@@ -1,9 +1,13 @@
 package endava.codebase.android.movieapp.ui.component
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -14,9 +18,10 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import endava.codebase.android.movieapp.mock.MoviesMock
 import endava.codebase.android.movieapp.model.Movie
+import endava.codebase.android.movieapp.ui.theme.spacing
 
 data class MovieCardViewState(
-    val movie : Movie,
+    val movie: Movie,
 )
 
 @Composable
@@ -28,11 +33,10 @@ fun MovieCard(
     val isFavorite = remember { mutableStateOf(movieCardViewState.movie.isFavorite) }
 
     Card(
-        shape = RoundedCornerShape(20 .dp),
-        elevation = 10 .dp,
+        shape = RoundedCornerShape(MaterialTheme.spacing.medium),
+        elevation = MaterialTheme.spacing.small,
         modifier = modifier
             .clickable { onClick() }
-            .padding(5.dp)
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -49,12 +53,11 @@ fun MovieCard(
                 isFavorite = isFavorite.value,
                 onClick = { isFavorite.value = !isFavorite.value },
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(MaterialTheme.spacing.large)
                     .align(Alignment.TopStart)
-                    .padding(5.dp)
+                    .padding(MaterialTheme.spacing.extraSmall)
             )
         }
-
     }
 }
 
@@ -68,6 +71,8 @@ private fun MovieCardPreview() {
     MovieCard(
         MovieCardViewState(movie),
         onClick,
-        Modifier.size(width = 122 .dp, height = 180 .dp),
+        Modifier
+            .size(width = 122.dp, height = 180.dp)
+            .padding(MaterialTheme.spacing.extraSmall)
     )
 }

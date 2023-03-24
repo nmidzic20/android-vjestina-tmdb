@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -14,18 +15,18 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import endava.codebase.android.movieapp.R
+import endava.codebase.android.movieapp.ui.theme.spacing
 
 data class MovieCategoryLabelViewState(
     val itemId: Int,
-    var isSelected: Boolean,
+    val isSelected: Boolean,
     val categoryText: MovieCategoryLabelTextViewState,
 )
 
 sealed class MovieCategoryLabelTextViewState {
-    data class TextString (val text: String) : MovieCategoryLabelTextViewState()
-    data class TextStringResource (@StringRes val textRes: Int) : MovieCategoryLabelTextViewState()
+    data class TextString(val text: String) : MovieCategoryLabelTextViewState()
+    data class TextStringResource(@StringRes val textRes: Int) : MovieCategoryLabelTextViewState()
 }
 
 @Composable
@@ -35,65 +36,70 @@ fun MovieCategoryLabel(
     onClick: (Int) -> Unit,
 ) {
 
-    val textContent : String = when(movieCategoryLabelViewState.categoryText) {
-        is MovieCategoryLabelTextViewState.TextString ->
-            movieCategoryLabelViewState.categoryText.text
-        is MovieCategoryLabelTextViewState.TextStringResource ->
-            stringResource(id = movieCategoryLabelViewState.categoryText.textRes)
-    }
+    val textContent: String =
+        when (movieCategoryLabelViewState.categoryText) {
+            is MovieCategoryLabelTextViewState.TextString ->
+                movieCategoryLabelViewState.categoryText.text
+            is MovieCategoryLabelTextViewState.TextStringResource ->
+                stringResource(id = movieCategoryLabelViewState.categoryText.textRes)
+        }
 
     Text(
         text = textContent,
         fontWeight =
-            if (movieCategoryLabelViewState.isSelected)
-                FontWeight.Bold
-            else
-                FontWeight.Normal,
+        if (movieCategoryLabelViewState.isSelected)
+            FontWeight.Bold
+        else
+            FontWeight.Normal,
         style =
-            if (movieCategoryLabelViewState.isSelected)
-                TextStyle(textDecoration = TextDecoration.Underline)
-            else
-                TextStyle(textDecoration = TextDecoration.None),
+        if (movieCategoryLabelViewState.isSelected)
+            TextStyle(textDecoration = TextDecoration.Underline)
+        else
+            TextStyle(textDecoration = TextDecoration.None),
         modifier = modifier
-            .padding(5.dp)
             .clickable { onClick(movieCategoryLabelViewState.itemId) }
     )
 }
 
+@Preview
 @Composable
-fun MovieCategoryLabelScreen()
-{
+private fun MovieCategoryLabelPreview() {
     val movieCategoryLabelViewStateList = remember {
         mutableStateListOf(
-            MovieCategoryLabelViewState(0,true, MovieCategoryLabelTextViewState.TextString("Movies1")),
-            MovieCategoryLabelViewState(1,false, MovieCategoryLabelTextViewState.TextStringResource(
-                R.string.movie_category)),
+            MovieCategoryLabelViewState(0, true, MovieCategoryLabelTextViewState.TextString("Movies1")),
+            MovieCategoryLabelViewState(
+                1, false,
+                MovieCategoryLabelTextViewState.TextStringResource(
+                    R.string.movie_category
+                )
+            ),
         )
     }
 
-    val onClick = { selectedId : Int ->
-        movieCategoryLabelViewStateList.forEach {
-            it.isSelected = it.itemId == selectedId
+    val onClick = { selectedId: Int ->
+        val iterate = movieCategoryLabelViewStateList.listIterator()
+        while (iterate.hasNext()) {
+            val oldValue = iterate.next()
+            iterate.set(
+                MovieCategoryLabelViewState(
+                    itemId = oldValue.itemId,
+                    categoryText = oldValue.categoryText,
+                    isSelected = oldValue.itemId == selectedId
+                )
+            )
         }
     }
 
     Row() {
         MovieCategoryLabel(
             movieCategoryLabelViewState = movieCategoryLabelViewStateList[0],
-            Modifier,
+            Modifier.padding(MaterialTheme.spacing.extraSmall),
             onClick = onClick,
         )
         MovieCategoryLabel(
             movieCategoryLabelViewState = movieCategoryLabelViewStateList[1],
-            Modifier,
+            Modifier.padding(MaterialTheme.spacing.extraSmall),
             onClick = onClick,
         )
     }
-}
-
-@Preview
-@Composable
-private fun MovieCategoryLabelPreview()
-{
-    MovieCategoryLabelScreen()
 }

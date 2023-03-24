@@ -21,8 +21,8 @@ import endava.codebase.android.movieapp.ui.theme.Gray700
 
 @Composable
 fun FavoriteButton(
-    isFavorite : Boolean,
-    onClick : () -> Unit,
+    isFavorite: Boolean,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -34,21 +34,19 @@ fun FavoriteButton(
     ) {
         Image(
             painter =
-                if (isFavorite)
-                    painterResource(R.drawable.icon_heart_filled)
-                else
-                    painterResource(R.drawable.icon_heart_empty),
+            if (isFavorite)
+                painterResource(R.drawable.icon_heart_filled)
+            else
+                painterResource(R.drawable.icon_heart_empty),
             contentDescription = "Heart icon",
             modifier = Modifier.fillMaxSize()
         )
     }
-
 }
 
 @Preview
 @Composable
-private fun FavoriteButtonPreview()
-{
+private fun FavoriteButtonPreview() {
     val isFavorite = remember { mutableStateOf(false) }
     val onClick = { isFavorite.value = !isFavorite.value }
 

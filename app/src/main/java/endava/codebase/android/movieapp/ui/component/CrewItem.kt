@@ -2,13 +2,14 @@ package endava.codebase.android.movieapp.ui.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import endava.codebase.android.movieapp.mock.MoviesMock
+import endava.codebase.android.movieapp.ui.theme.spacing
 
 data class CrewItemViewState(
     val name: String,
@@ -23,14 +24,16 @@ fun CrewItem(
     Column(
         modifier = modifier
     ) {
-        Text(text = crewItemViewState.name,
+        Text(
+            text = crewItemViewState.name,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .padding(2 .dp)
+                .padding(MaterialTheme.spacing.extraSmall)
         )
-        Text(text = crewItemViewState.job,
+        Text(
+            text = crewItemViewState.job,
             modifier = Modifier
-                .padding(2 .dp)
+                .padding(MaterialTheme.spacing.extraSmall)
         )
     }
 }
