@@ -36,7 +36,7 @@ fun UserScoreProgressBar(userScore: UserScore, modifier: Modifier = Modifier) {
     ) {
         Canvas(
             modifier = Modifier
-                .fillMaxSize(1f)
+                .fillMaxSize()
         ) {
             drawCircle(
                 color = DarkGreen,

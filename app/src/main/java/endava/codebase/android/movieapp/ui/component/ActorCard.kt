@@ -36,7 +36,7 @@ fun ActorCard(
         elevation = MaterialTheme.spacing.small,
         modifier = modifier
     ) {
-        Column() {
+        Column {
             AsyncImage(
                 model = actorCardViewState.imageUrl,
                 contentDescription = actorCardViewState.name,

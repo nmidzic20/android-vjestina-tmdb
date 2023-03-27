@@ -44,18 +44,22 @@ fun MovieCategoryLabel(
                 stringResource(id = movieCategoryLabelViewState.categoryText.textRes)
         }
 
-    Text(
-        text = textContent,
-        fontWeight =
+    val fontWeight =
         if (movieCategoryLabelViewState.isSelected)
             FontWeight.Bold
         else
-            FontWeight.Normal,
-        style =
+            FontWeight.Normal
+
+    val style =
         if (movieCategoryLabelViewState.isSelected)
             TextStyle(textDecoration = TextDecoration.Underline)
         else
-            TextStyle(textDecoration = TextDecoration.None),
+            TextStyle(textDecoration = TextDecoration.None)
+
+    Text(
+        text = textContent,
+        fontWeight = fontWeight,
+        style = style,
         modifier = modifier
             .clickable { onClick(movieCategoryLabelViewState.itemId) }
     )
@@ -64,7 +68,7 @@ fun MovieCategoryLabel(
 @Preview
 @Composable
 private fun MovieCategoryLabelPreview() {
-    val movieCategoryLabelViewStateList = remember {
+    var movieCategoryLabelViewStateList = remember {
         mutableStateListOf(
             MovieCategoryLabelViewState(0, true, MovieCategoryLabelTextViewState.TextString("Movies1")),
             MovieCategoryLabelViewState(
@@ -90,7 +94,7 @@ private fun MovieCategoryLabelPreview() {
         }
     }
 
-    Row() {
+    Row {
         MovieCategoryLabel(
             movieCategoryLabelViewState = movieCategoryLabelViewStateList[0],
             Modifier.padding(MaterialTheme.spacing.extraSmall),
