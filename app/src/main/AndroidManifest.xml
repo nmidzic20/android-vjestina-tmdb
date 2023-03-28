@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="endava.codebase.android.movieapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name=".MovieApp"
         android:allowBackup="true"
