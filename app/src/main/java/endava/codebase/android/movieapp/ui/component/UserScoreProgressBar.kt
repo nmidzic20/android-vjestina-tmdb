@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -52,6 +53,7 @@ fun UserScoreProgressBar(userScore: UserScore, modifier: Modifier = Modifier) {
         }
         Text(
             text = userScore.text,
+            color = MaterialTheme.colors.onPrimary,
             modifier = Modifier
                 .align(Alignment.Center)
         )

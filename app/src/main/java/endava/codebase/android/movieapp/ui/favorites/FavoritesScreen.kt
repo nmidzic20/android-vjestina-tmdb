@@ -3,6 +3,7 @@ package endava.codebase.android.movieapp.ui.favorites
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.MaterialTheme
@@ -43,25 +44,38 @@ fun FavoritesRoute(
 @Composable
 fun FavoritesScreen(
     favoritesViewState: FavoritesViewState,
-    onClick: (Int) -> Unit,
+    onCardClick: (Int) -> Unit,
     onFavoriteClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val favoriteMovies = favoritesViewState.favoritesMovieViewStateList.toMutableList()
 
     Column(modifier = modifier) {
-        Text(
-            text = stringResource(id = R.string.favorites),
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(MaterialTheme.spacing.small)
-        )
         LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 128.dp)
+            columns = GridCells.Adaptive(minSize = 128.dp),
         ) {
-            itemsIndexed(favoriteMovies) { index, favoriteMovie ->
+            item(
+                span = {
+                    GridItemSpan(maxCurrentLineSpan)
+                }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.favorites),
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(MaterialTheme.spacing.small)
+                )
+            }
+
+            itemsIndexed(
+                items = favoriteMovies,
+                key = { _, movie ->
+                    movie.id
+                }
+            ) { index, movie ->
                 MovieCard(
                     movieCardViewState = favoriteMovies[index].movieCardViewState,
-                    onClick = { onClick(favoriteMovie.id) },
+                    onClick = { onCardClick(movie.id) },
                     onFavoriteClick = { onFavoriteClick(index) },
                     modifier = Modifier.padding(MaterialTheme.spacing.small)
                 )

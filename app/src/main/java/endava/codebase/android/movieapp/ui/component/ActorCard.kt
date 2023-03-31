@@ -66,7 +66,7 @@ fun ActorCard(
 @Preview
 @Composable
 private fun ActorCardPreview() {
-    val actor = MoviesMock.getActor()
+    val actor = MoviesMock.getMovieDetails().cast[0]
     ActorCard(
         ActorCardViewState(actor.imageUrl!!, actor.name, actor.character),
         Modifier

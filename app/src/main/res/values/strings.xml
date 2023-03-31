@@ -4,4 +4,7 @@
     <string name="tmdb_logo">TMDB logo</string>
     <string name="home">Home</string>
     <string name="favorites">Favorites</string>
+    <string name="user_score">User score</string>
+    <string name="overview">Overview</string>
+    <string name="top_billed_cast">Top Billed Cast</string>
 </resources>
