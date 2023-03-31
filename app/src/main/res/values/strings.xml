@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">MovieApp</string>
     <string name="movie_category">Movies2</string>
+    <string name="tmdb_logo">TMDB logo</string>
+    <string name="home">Home</string>
+    <string name="favorites">Favorites</string>
 </resources>

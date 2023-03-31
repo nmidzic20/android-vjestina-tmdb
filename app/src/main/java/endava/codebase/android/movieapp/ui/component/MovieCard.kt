@@ -17,11 +17,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import endava.codebase.android.movieapp.mock.MoviesMock
-import endava.codebase.android.movieapp.model.Movie
 import endava.codebase.android.movieapp.ui.theme.spacing
 
 data class MovieCardViewState(
-    val movie: Movie,
+    val imageUrl: String?,
+    val isFavorite: Boolean,
 )
 
 @Composable
@@ -43,13 +43,13 @@ fun MovieCard(
                 .fillMaxWidth()
         ) {
             AsyncImage(
-                model = movieCardViewState.movie.imageUrl,
-                contentDescription = movieCardViewState.movie.title,
+                model = movieCardViewState.imageUrl,
+                contentDescription = movieCardViewState.imageUrl,
                 modifier = Modifier
                     .fillMaxWidth()
             )
             FavoriteButton(
-                isFavorite = movieCardViewState.movie.isFavorite,
+                isFavorite = movieCardViewState.isFavorite,
                 onClick = onFavoriteClick,
                 modifier = Modifier
                     .size(MaterialTheme.spacing.large)
@@ -64,21 +64,19 @@ fun MovieCard(
 @Composable
 private fun MovieCardPreview() {
     val movieDetails = MoviesMock.getMovieDetails()
-    val movie = remember { mutableStateOf(movieDetails.movie) }
+    val _movieCardViewState = MovieCardViewState(movieDetails.movie.imageUrl, movieDetails.movie.isFavorite)
+    val movieCardViewState = remember { mutableStateOf(_movieCardViewState) }
 
     val onClick = { println("Movie card clicked") }
     val onFavoriteClick = {
-        movie.value = Movie(
-            movie.value.id,
-            movie.value.title,
-            movie.value.overview,
-            movie.value.imageUrl,
-            !movie.value.isFavorite
+        movieCardViewState.value = MovieCardViewState(
+            movieCardViewState.value.imageUrl,
+            movieCardViewState.value.isFavorite
         )
     }
 
     MovieCard(
-        MovieCardViewState(movie.value),
+        movieCardViewState.value,
         onClick,
         onFavoriteClick,
         Modifier
