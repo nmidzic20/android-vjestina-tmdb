@@ -8,8 +8,10 @@ import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -72,12 +74,12 @@ fun FavoritesScreen(
 @Composable
 fun FavoritesScreenPreview() {
 
-    val favoritesViewState = remember { mutableStateOf(favoritesViewState) }
+    var favoritesViewState by remember { mutableStateOf(favoritesViewState) }
 
     val onClick = { selectedId: Int -> println("Movie card $selectedId clicked") }
 
     val onFavoriteClick = { index: Int ->
-        val favoriteMovies = favoritesViewState.value.favoritesMovieViewStateList.toMutableList()
+        val favoriteMovies = favoritesViewState.favoritesMovieViewStateList.toMutableList()
         /*
         // if passing selectedId instead of index:
         val iterate = favoriteMovies.listIterator()
@@ -105,12 +107,12 @@ fun FavoritesScreenPreview() {
                 isFavorite = !favoriteMovies[index].movieCardViewState.isFavorite
             )
         )
-        favoritesViewState.value = FavoritesViewState(favoriteMovies)
+        favoritesViewState = FavoritesViewState(favoriteMovies)
     }
 
     MovieAppTheme {
         FavoritesScreen(
-            favoritesViewState.value,
+            favoritesViewState,
             onClick,
             onFavoriteClick,
         )
