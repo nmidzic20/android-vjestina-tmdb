@@ -1,10 +1,7 @@
 package endava.codebase.android.movieapp.ui.component
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -13,10 +10,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import endava.codebase.android.movieapp.mock.MoviesMock
+import endava.codebase.android.movieapp.ui.home.HomeMovieViewState
 import endava.codebase.android.movieapp.ui.theme.spacing
 
 data class MovieCardViewState(
@@ -28,7 +28,7 @@ data class MovieCardViewState(
 fun MovieCard(
     movieCardViewState: MovieCardViewState,
     onClick: () -> Unit,
-    onFavoriteClick: () -> Unit,
+    onFavoriteClick: (MovieCardViewState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -39,18 +39,18 @@ fun MovieCard(
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
         ) {
             AsyncImage(
                 model = movieCardViewState.imageUrl,
+            contentScale = ContentScale.FillBounds,
                 contentDescription = movieCardViewState.imageUrl,
                 modifier = Modifier
-                    .fillMaxWidth()
             )
             FavoriteButton(
                 isFavorite = movieCardViewState.isFavorite,
-                onClick = onFavoriteClick,
+                onClick = { onFavoriteClick(movieCardViewState) },
                 modifier = Modifier
                     .size(MaterialTheme.spacing.large)
                     .align(Alignment.TopStart)
@@ -68,10 +68,10 @@ private fun MovieCardPreview() {
     val movieCardViewState = remember { mutableStateOf(_movieCardViewState) }
 
     val onClick = { println("Movie card clicked") }
-    val onFavoriteClick = {
+    val onFavoriteClick = { _movieCardViewState: MovieCardViewState ->
         movieCardViewState.value = MovieCardViewState(
-            movieCardViewState.value.imageUrl,
-            movieCardViewState.value.isFavorite
+            _movieCardViewState.imageUrl,
+            !_movieCardViewState.isFavorite
         )
     }
 

@@ -21,9 +21,11 @@ import androidx.compose.ui.unit.dp
 import endava.codebase.android.movieapp.mock.MoviesMock
 import endava.codebase.android.movieapp.model.MovieCategory
 import endava.codebase.android.movieapp.ui.component.MovieCard
+import endava.codebase.android.movieapp.ui.component.MovieCardViewState
 import endava.codebase.android.movieapp.ui.component.MovieCategoryLabel
 import endava.codebase.android.movieapp.ui.component.MovieCategoryLabelViewState
 import endava.codebase.android.movieapp.ui.home.HomeMovieCategoryViewState
+import endava.codebase.android.movieapp.ui.home.HomeMovieViewState
 import endava.codebase.android.movieapp.ui.home.mapper.HomeScreenMapper
 import endava.codebase.android.movieapp.ui.home.mapper.HomeScreenMapperImpl
 import endava.codebase.android.movieapp.ui.moviedetails.movieDetailsViewState
@@ -62,7 +64,7 @@ fun HomeRoute(
 fun HomeScreen(
     homeMovieCategoryViewStateList: List<HomeMovieCategoryViewState>,
     onCategoryClick: (MovieCategoryLabelViewState) -> Unit,
-    onFavoriteClick: (Int) -> Unit,
+    onFavoriteClick: (MovieCardViewState) -> Unit,
     modifier: Modifier = Modifier
 ) {
     /*LazyColumn(modifier = modifier) {
@@ -103,7 +105,7 @@ fun HomeScreen(
 fun CategoryComponent(
     homeMovieCategoryViewState: HomeMovieCategoryViewState,
     onCategoryClick: (MovieCategoryLabelViewState) -> Unit,
-    onFavoriteClick: (Int) -> Unit,
+    onFavoriteClick: (MovieCardViewState) -> Unit,
     title: String,
     modifier: Modifier = Modifier
 ) {
@@ -145,7 +147,7 @@ fun CategoryComponent(
                     MovieCard(
                         movieCardViewState = movie.movieCardViewState,
                         onClick = {},
-                        onFavoriteClick = {},
+                        onFavoriteClick = onFavoriteClick,
 
                     )
                 }
@@ -172,7 +174,7 @@ fun HomeScreenPreview() {
                             movieCategory.categoryText
                         )
                     },
-                    movies =trendingCategoryViewState.movies
+                    movies = trendingCategoryViewState.movies
                 )
             }
             MovieCategory.NOW_PLAYING.ordinal, MovieCategory.UPCOMING.ordinal -> {
@@ -191,13 +193,85 @@ fun HomeScreenPreview() {
         }
     }
 
+    val onFavoriteClick = { selectedMovie: MovieCardViewState ->
+
+        val trendingMovies = trendingCategoryViewState.movies.map {
+            HomeMovieViewState(
+                it.id,
+                MovieCardViewState(
+                    it.movieCardViewState.imageUrl,
+                    if (selectedMovie.imageUrl == it.movieCardViewState.imageUrl)
+                        !it.movieCardViewState.isFavorite
+                    else
+                        it.movieCardViewState.isFavorite
+                )
+            )
+        }
+        val newReleasesMovies = newReleasesCategoryViewState.movies.map {
+            HomeMovieViewState(
+                it.id,
+                MovieCardViewState(
+                    it.movieCardViewState.imageUrl,
+                    if (selectedMovie.imageUrl == it.movieCardViewState.imageUrl)
+                        !it.movieCardViewState.isFavorite
+                    else
+                        it.movieCardViewState.isFavorite
+                )
+            )
+        }
+
+        trendingCategoryViewState = HomeMovieCategoryViewState(
+            movieCategories = trendingCategoryViewState.movieCategories,
+            movies = trendingMovies
+        )
+        newReleasesCategoryViewState = HomeMovieCategoryViewState(
+            movieCategories = newReleasesCategoryViewState.movieCategories,
+            movies = newReleasesMovies
+        )
+
+
+        /*if (trendingCategoryViewState.movies.any { it.id == selectedMovie.id })
+        {
+            val movies = trendingCategoryViewState.movies.toMutableList()
+
+            movies[selectedMovie.id] = HomeMovieViewState(
+                id = movies[selectedMovie.id].id,
+                movieCardViewState = MovieCardViewState(
+                    imageUrl = movies[selectedMovie.id].movieCardViewState.imageUrl,
+                    isFavorite = !movies[selectedMovie.id].movieCardViewState.isFavorite
+                )
+            )
+            trendingCategoryViewState = HomeMovieCategoryViewState(
+                trendingCategoryViewState.movieCategories,
+                movies
+            )
+        }
+        if (newReleasesCategoryViewState.movies.any { it.id == selectedMovie.id })
+        {
+            val movies = newReleasesCategoryViewState.movies.toMutableList()
+
+            movies[selectedMovie.id] = HomeMovieViewState(
+                id = movies[selectedMovie.id].id,
+                movieCardViewState = MovieCardViewState(
+                    imageUrl = movies[selectedMovie.id].movieCardViewState.imageUrl,
+                    isFavorite = !movies[selectedMovie.id].movieCardViewState.isFavorite
+                )
+            )
+            newReleasesCategoryViewState = HomeMovieCategoryViewState(
+                newReleasesCategoryViewState.movieCategories,
+                movies
+            )
+        }*/
+
+    }
+
     HomeScreen(
         homeMovieCategoryViewStateList = listOf(
             trendingCategoryViewState,
             newReleasesCategoryViewState
         ),
         onCategoryClick = onCategoryClick,
-        onFavoriteClick = {}
+        onFavoriteClick = onFavoriteClick
     )
 
 }
