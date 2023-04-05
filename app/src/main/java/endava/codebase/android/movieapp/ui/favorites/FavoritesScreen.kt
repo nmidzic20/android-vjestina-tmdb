@@ -1,6 +1,5 @@
 package endava.codebase.android.movieapp.ui.favorites
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -50,36 +49,34 @@ fun FavoritesScreen(
 ) {
     val favoriteMovies = favoritesViewState.favoritesMovieViewStateList.toMutableList()
 
-    Column(modifier = modifier) {
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 128.dp),
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(minSize = 128.dp),
+    ) {
+        item(
+            span = {
+                GridItemSpan(maxCurrentLineSpan)
+            }
         ) {
-            item(
-                span = {
-                    GridItemSpan(maxCurrentLineSpan)
-                }
-            ) {
-                Text(
-                    text = stringResource(id = R.string.favorites),
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(MaterialTheme.spacing.small)
-                )
-            }
+            Text(
+                text = stringResource(id = R.string.favorites),
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(MaterialTheme.spacing.small)
+            )
+        }
 
-            itemsIndexed(
-                items = favoriteMovies,
-                key = { _, movie ->
-                    movie.id
-                }
-            ) { index, movie ->
-                MovieCard(
-                    movieCardViewState = favoriteMovies[index].movieCardViewState,
-                    onClick = { onCardClick(movie.id) },
-                    onFavoriteClick = { onFavoriteClick(index) },
-                    modifier = Modifier.padding(MaterialTheme.spacing.small)
-                )
+        itemsIndexed(
+            items = favoriteMovies,
+            key = { _, movie ->
+                movie.id
             }
+        ) { index, movie ->
+            MovieCard(
+                movieCardViewState = favoriteMovies[index].movieCardViewState,
+                onClick = { onCardClick(movie.id) },
+                onFavoriteClick = { onFavoriteClick(index) },
+                modifier = Modifier.padding(MaterialTheme.spacing.small)
+            )
         }
     }
 }

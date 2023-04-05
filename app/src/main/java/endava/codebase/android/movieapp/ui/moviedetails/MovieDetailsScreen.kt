@@ -22,6 +22,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -102,6 +106,17 @@ fun CoverImage(
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
+                .drawWithCache {
+                    val gradient = Brush.verticalGradient(
+                        colors = listOf(Color.Transparent, Color.Black),
+                        startY = size.height / 2,
+                        endY = size.height
+                    )
+                    onDrawWithContent {
+                        drawContent()
+                        drawRect(gradient, blendMode = BlendMode.Multiply)
+                    }
+                }
         )
         CoverImageInfo(
             movieDetailsViewState,
@@ -188,7 +203,7 @@ fun Crew(
             key = { _, crewman ->
                 crewman.id
             }
-        ) { index, crewmanViewState ->
+        ) { _, crewmanViewState ->
             CrewItem(
                 crewmanViewState.crewItemViewState,
                 Modifier.padding(MaterialTheme.spacing.extraSmall)
@@ -221,7 +236,7 @@ fun TopBilledCast(
                 key = { _, actor ->
                     actor.id
                 }
-            ) { index, actorViewState ->
+            ) { _, actorViewState ->
                 ActorCard(
                     actorViewState.actorCardViewState,
                     Modifier
@@ -238,12 +253,23 @@ fun TopBilledCast(
 fun MovieDetailsScreenPreview() {
 
     var movieDetailsViewState by remember { mutableStateOf(movieDetailsViewState) }
-    val onClick = { }
+    val onFavoriteClick = {
+        movieDetailsViewState = MovieDetailsViewState(
+            id = movieDetailsViewState.id,
+            imageUrl = movieDetailsViewState.imageUrl,
+            voteAverage = movieDetailsViewState.voteAverage,
+            title = movieDetailsViewState.title,
+            overview = movieDetailsViewState.overview,
+            isFavorite = !movieDetailsViewState.isFavorite,
+            crew = movieDetailsViewState.crew,
+            cast = movieDetailsViewState.cast
+        )
+    }
 
     MovieAppTheme {
         MovieDetailsScreen(
             movieDetailsViewState,
-            onClick,
+            onFavoriteClick,
         )
     }
 }
