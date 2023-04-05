@@ -10,13 +10,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import endava.codebase.android.movieapp.mock.MoviesMock
-import endava.codebase.android.movieapp.ui.home.HomeMovieViewState
 import endava.codebase.android.movieapp.ui.theme.spacing
 
 data class MovieCardViewState(
@@ -27,7 +25,7 @@ data class MovieCardViewState(
 @Composable
 fun MovieCard(
     movieCardViewState: MovieCardViewState,
-    onClick: () -> Unit,
+    onClick: (Int) -> Unit,
     onFavoriteClick: (MovieCardViewState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -35,7 +33,7 @@ fun MovieCard(
         shape = RoundedCornerShape(MaterialTheme.spacing.medium),
         elevation = MaterialTheme.spacing.small,
         modifier = modifier
-            .clickable { onClick() }
+            .clickable { onClick(1) } // since I cannot pass movieId here?
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -67,7 +65,7 @@ private fun MovieCardPreview() {
     val _movieCardViewState = MovieCardViewState(movieDetails.movie.imageUrl, movieDetails.movie.isFavorite)
     val movieCardViewState = remember { mutableStateOf(_movieCardViewState) }
 
-    val onClick = { println("Movie card clicked") }
+    val onClick = { movieId: Int -> println("Movie card clicked") }
     val onFavoriteClick = { _movieCardViewState: MovieCardViewState ->
         movieCardViewState.value = MovieCardViewState(
             _movieCardViewState.imageUrl,

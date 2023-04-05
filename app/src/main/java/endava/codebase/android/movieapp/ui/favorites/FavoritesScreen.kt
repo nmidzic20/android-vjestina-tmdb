@@ -33,17 +33,34 @@ val favoritesViewState = favoritesMapper.toFavoritesViewState(MoviesMock.getMovi
 
 @Composable
 fun FavoritesRoute(
-// actions
+    onNavigateToMovieDetails: (Int) -> Unit
 ) {
-    // val _favoritesViewState by remember { mutableStateOf(favoritesViewState) }
-// ...
-    // FavoritesScreen(_favoritesViewState)
+    var favoritesViewState by remember { mutableStateOf(favoritesViewState) }
+
+    val onFavoriteClick = { index: Int ->
+        val favoriteMovies = favoritesViewState.favoritesMovieViewStateList.toMutableList()
+
+        favoriteMovies[index] = FavoritesMovieViewState(
+            id = favoriteMovies[index].id,
+            movieCardViewState = MovieCardViewState(
+                imageUrl = favoriteMovies[index].movieCardViewState.imageUrl,
+                isFavorite = !favoriteMovies[index].movieCardViewState.isFavorite
+            )
+        )
+        favoritesViewState = FavoritesViewState(favoriteMovies)
+    }
+
+    FavoritesScreen(
+        favoritesViewState,
+        onNavigateToMovieDetails,
+        onFavoriteClick,
+    )
 }
 
 @Composable
 fun FavoritesScreen(
     favoritesViewState: FavoritesViewState,
-    onCardClick: (Int) -> Unit,
+    onMovieCardClick: (Int) -> Unit,
     onFavoriteClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -51,6 +68,7 @@ fun FavoritesScreen(
 
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 128.dp),
+        modifier = modifier
     ) {
         item(
             span = {
@@ -73,7 +91,7 @@ fun FavoritesScreen(
         ) { index, movie ->
             MovieCard(
                 movieCardViewState = favoriteMovies[index].movieCardViewState,
-                onClick = { onCardClick(movie.id) },
+                onClick = { onMovieCardClick(movie.id) },
                 onFavoriteClick = { onFavoriteClick(index) },
                 modifier = Modifier.padding(MaterialTheme.spacing.small)
             )
@@ -87,7 +105,7 @@ fun FavoritesScreenPreview() {
 
     var favoritesViewState by remember { mutableStateOf(favoritesViewState) }
 
-    val onClick = { selectedId: Int -> println("Movie card $selectedId clicked") }
+    val onMovieCardClick = { selectedId: Int -> println("Movie card $selectedId clicked") }
 
     val onFavoriteClick = { index: Int ->
         val favoriteMovies = favoritesViewState.favoritesMovieViewStateList.toMutableList()
@@ -124,7 +142,7 @@ fun FavoritesScreenPreview() {
     MovieAppTheme {
         FavoritesScreen(
             favoritesViewState,
-            onClick,
+            onMovieCardClick,
             onFavoriteClick,
         )
     }

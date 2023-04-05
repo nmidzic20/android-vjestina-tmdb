@@ -54,9 +54,26 @@ val movieDetailsViewState = movieDetailsMapper.toMovieDetailsViewState(MoviesMoc
 fun MovieDetailsRoute(
 // actions
 ) {
-    // val _movieDetailsViewState by remember { mutableStateOf(movieDetailsViewState) }
-// ...
-    // MovieDetailsScreen(_movieDetailsViewState)
+    var movieDetailsViewState by remember { mutableStateOf(movieDetailsViewState) }
+    val onFavoriteClick = {
+        movieDetailsViewState = MovieDetailsViewState(
+            id = movieDetailsViewState.id,
+            imageUrl = movieDetailsViewState.imageUrl,
+            voteAverage = movieDetailsViewState.voteAverage,
+            title = movieDetailsViewState.title,
+            overview = movieDetailsViewState.overview,
+            isFavorite = !movieDetailsViewState.isFavorite,
+            crew = movieDetailsViewState.crew,
+            cast = movieDetailsViewState.cast
+        )
+    }
+
+    MovieAppTheme {
+        MovieDetailsScreen(
+            movieDetailsViewState,
+            onFavoriteClick,
+        )
+    }
 }
 
 @Composable

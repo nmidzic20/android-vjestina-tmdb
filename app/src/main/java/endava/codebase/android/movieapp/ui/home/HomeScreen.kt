@@ -1,12 +1,9 @@
 package endava.codebase.android.movieapp.ui.favorites
 
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -28,7 +25,6 @@ import endava.codebase.android.movieapp.ui.home.HomeMovieCategoryViewState
 import endava.codebase.android.movieapp.ui.home.HomeMovieViewState
 import endava.codebase.android.movieapp.ui.home.mapper.HomeScreenMapper
 import endava.codebase.android.movieapp.ui.home.mapper.HomeScreenMapperImpl
-import endava.codebase.android.movieapp.ui.moviedetails.movieDetailsViewState
 import endava.codebase.android.movieapp.ui.theme.spacing
 
 private val homeScreenMapper: HomeScreenMapper = HomeScreenMapperImpl()
@@ -53,11 +49,88 @@ val newReleasesCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState
 
 @Composable
 fun HomeRoute(
-// actions
+onNavigateToMovieDetails: (Int) -> Unit
 ) {
-    // val _homeMovieCategoryViewState by remember { mutableStateOf(trendingCategoryViewState) }
-// ...
-    // HomeScreen(_homeMovieCategoryViewState)
+    //has to be the same variable name otherwise not working?
+    var trendingCategoryViewState by remember { mutableStateOf(trendingCategoryViewState) }
+    var newReleasesCategoryViewState by remember { mutableStateOf(newReleasesCategoryViewState) }
+
+    val onCategoryClick = { selectedMovieCategory: MovieCategoryLabelViewState ->
+        when (selectedMovieCategory.itemId) {
+            MovieCategory.POPULAR.ordinal, MovieCategory.TOP_RATED.ordinal -> {
+                trendingCategoryViewState = HomeMovieCategoryViewState(
+                    movieCategories = trendingCategoryViewState.movieCategories.map { movieCategory ->
+                        MovieCategoryLabelViewState(
+                            movieCategory.itemId,
+                            selectedMovieCategory.itemId == movieCategory.itemId,
+                            movieCategory.categoryText
+                        )
+                    },
+                    movies = trendingCategoryViewState.movies
+                )
+            }
+            MovieCategory.NOW_PLAYING.ordinal, MovieCategory.UPCOMING.ordinal -> {
+                newReleasesCategoryViewState = HomeMovieCategoryViewState(
+                    movieCategories = newReleasesCategoryViewState.movieCategories.map { movieCategory ->
+                        MovieCategoryLabelViewState(
+                            movieCategory.itemId,
+                            selectedMovieCategory.itemId == movieCategory.itemId,
+                            movieCategory.categoryText
+                        )
+
+                    },
+                    movies = newReleasesCategoryViewState.movies
+                )
+            }
+        }
+    }
+
+    val onFavoriteClick = { selectedMovie: MovieCardViewState ->
+
+        val trendingMovies = trendingCategoryViewState.movies.map {
+            HomeMovieViewState(
+                it.id,
+                MovieCardViewState(
+                    it.movieCardViewState.imageUrl,
+                    if (selectedMovie.imageUrl == it.movieCardViewState.imageUrl)
+                        !it.movieCardViewState.isFavorite
+                    else
+                        it.movieCardViewState.isFavorite
+                )
+            )
+        }
+        val newReleasesMovies = newReleasesCategoryViewState.movies.map {
+            HomeMovieViewState(
+                it.id,
+                MovieCardViewState(
+                    it.movieCardViewState.imageUrl,
+                    if (selectedMovie.imageUrl == it.movieCardViewState.imageUrl)
+                        !it.movieCardViewState.isFavorite
+                    else
+                        it.movieCardViewState.isFavorite
+                )
+            )
+        }
+
+        trendingCategoryViewState = HomeMovieCategoryViewState(
+            movieCategories = trendingCategoryViewState.movieCategories,
+            movies = trendingMovies
+        )
+        newReleasesCategoryViewState = HomeMovieCategoryViewState(
+            movieCategories = newReleasesCategoryViewState.movieCategories,
+            movies = newReleasesMovies
+        )
+    }
+
+    HomeScreen(
+        homeMovieCategoryViewStateList = listOf(
+            trendingCategoryViewState,
+            newReleasesCategoryViewState
+        ),
+        onCategoryClick = onCategoryClick,
+        onFavoriteClick = onFavoriteClick,
+        onMovieCardClick = onNavigateToMovieDetails,
+    )
 }
 
 @Composable
@@ -65,7 +138,8 @@ fun HomeScreen(
     homeMovieCategoryViewStateList: List<HomeMovieCategoryViewState>,
     onCategoryClick: (MovieCategoryLabelViewState) -> Unit,
     onFavoriteClick: (MovieCardViewState) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onMovieCardClick: (Int) -> Unit
 ) {
     /*LazyColumn(modifier = modifier) {
         items(
@@ -88,6 +162,7 @@ fun HomeScreen(
             homeMovieCategoryViewState = homeMovieCategoryViewStateList[0],
             onCategoryClick = onCategoryClick,
             onFavoriteClick = onFavoriteClick,
+            onMovieCardClick = onMovieCardClick,
             title = "Trending movies",
             modifier = Modifier.padding(MaterialTheme.spacing.small)
         )
@@ -95,6 +170,7 @@ fun HomeScreen(
             homeMovieCategoryViewState = homeMovieCategoryViewStateList[1],
             onCategoryClick = onCategoryClick,
             onFavoriteClick = onFavoriteClick,
+            onMovieCardClick = onMovieCardClick,
             title = "New releases",
             modifier = Modifier.padding(MaterialTheme.spacing.small)
         )
@@ -106,6 +182,7 @@ fun CategoryComponent(
     homeMovieCategoryViewState: HomeMovieCategoryViewState,
     onCategoryClick: (MovieCategoryLabelViewState) -> Unit,
     onFavoriteClick: (MovieCardViewState) -> Unit,
+    onMovieCardClick: (Int) -> Unit,
     title: String,
     modifier: Modifier = Modifier
 ) {
@@ -138,15 +215,16 @@ fun CategoryComponent(
                     movie.id
                 }
             ) { _, movie ->
-                Box(Modifier
-                    .width(125.dp)
-                    //.size(width = 125.dp, height = 209.dp)
-                    .fillMaxSize()
-                    .padding(MaterialTheme.spacing.extraSmall)
+                Box(
+                    Modifier
+                        .width(125.dp)
+                        //.size(width = 125.dp, height = 209.dp)
+                        .fillMaxSize()
+                        .padding(MaterialTheme.spacing.extraSmall)
                 ) {
                     MovieCard(
                         movieCardViewState = movie.movieCardViewState,
-                        onClick = {},
+                        onClick = onMovieCardClick,
                         onFavoriteClick = onFavoriteClick,
 
                     )
@@ -271,7 +349,8 @@ fun HomeScreenPreview() {
             newReleasesCategoryViewState
         ),
         onCategoryClick = onCategoryClick,
-        onFavoriteClick = onFavoriteClick
+        onFavoriteClick = onFavoriteClick,
+        onMovieCardClick = { movieId -> println("Clicked movie card with movieId $movieId") }
     )
 
 }

@@ -29,7 +29,7 @@ fun FavoriteButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val resourceId = if (isFavorite) R.drawable.icon_heart_filled else R.drawable.icon_heart_empty
+    val resourceId = if (isFavorite) R.drawable.ic_favorite_filled else R.drawable.ic_favorite_outlined
 
     Image(
         painter = painterResource(resourceId),
