@@ -2,14 +2,27 @@ package endava.codebase.android.movieapp.ui.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.runtime.*
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -20,29 +33,46 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import endava.codebase.android.movieapp.R
 import endava.codebase.android.movieapp.navigation.MOVIE_ID_KEY
 import endava.codebase.android.movieapp.navigation.MovieDetailsDestination
 import endava.codebase.android.movieapp.navigation.NavigationItem
 import endava.codebase.android.movieapp.ui.favorites.FavoritesRoute
 import endava.codebase.android.movieapp.ui.favorites.HomeRoute
 import endava.codebase.android.movieapp.ui.moviedetails.MovieDetailsRoute
-import endava.codebase.android.movieapp.R
+import endava.codebase.android.movieapp.ui.theme.spacing
 
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
+    // Subscribe to navStackBackEntry to get current route
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    /*val showBottomBar by remember {
-        mutableStateOf()
-    }*/
-    val showBottomBar = true
-    val showBackIcon = !showBottomBar
+    var showBottomBar by remember {
+        mutableStateOf(true)
+    }
+    val showBackIcon: Boolean
+
+    // Since we are subscribed to navBackStackEntry, this will execute each time
+    // there is a new entry to the stack (each time route is changed)
+    when (navBackStackEntry?.destination?.route) {
+        MovieDetailsDestination.route -> {
+            showBottomBar = false
+            showBackIcon = !showBottomBar
+        }
+        else -> {
+            showBottomBar = true
+            showBackIcon = !showBottomBar
+        }
+    }
+
     Scaffold(
         topBar = {
             TopBar(
                 navigationIcon = {
-                    if (showBackIcon) BackIcon(onBackClick = navController::popBackStack)
+                    if (showBackIcon) BackIcon(onBackClick = navController::popBackStack, Modifier.padding(MaterialTheme.spacing.small))
                 }
             )
         },
@@ -53,11 +83,17 @@ fun MainScreen() {
                         NavigationItem.HomeDestination,
                         NavigationItem.FavoritesDestination,
                     ),
-                    onNavigateToDestination = {destination ->
+                    onNavigateToDestination = { destination ->
                         navController.navigate(destination.route) {
+                            // Remove all destinations from back stack until we get to startDestination,
+                            // to prevent unnecessary stacking, since Home & Favorite screens are
+                            // only meant for switching between the two, and we also need to enable
+                            // exit from the app if back button pressed anytime on start destination (HomeScreen)
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }
+                            // Only one copy of destination (this is in case we click on the same
+                            // icon again, to prevent unnecessary stacking)
                             launchSingleTop = true
                             restoreState = true
                         }
@@ -80,7 +116,8 @@ fun MainScreen() {
                         onNavigateToMovieDetails = { movieId ->
                             val movieRoute = MovieDetailsDestination.createNavigationRoute(movieId)
                             println("MOVIE ROUTE $movieRoute")
-                            navController.navigate(movieRoute) },
+                            navController.navigate(movieRoute)
+                        },
                     )
                 }
                 composable(NavigationItem.FavoritesDestination.route) {
@@ -88,7 +125,8 @@ fun MainScreen() {
                         onNavigateToMovieDetails = { movieId ->
                             val movieRoute = MovieDetailsDestination.createNavigationRoute(movieId)
                             println("MOVIE ROUTE $movieRoute")
-                            navController.navigate(movieRoute) },
+                            navController.navigate(movieRoute)
+                        },
                     )
                 }
                 composable(
@@ -108,18 +146,28 @@ private fun TopBar(
     navigationIcon: @Composable (() -> Unit)? = null,
 ) {
     TopAppBar(modifier = Modifier) {
+
         Row(
-            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.tmdb_logo),
-                contentDescription = stringResource(R.string.tmdb_logo)
-            )
+            if (navigationIcon != null) {
+                navigationIcon()
+            }
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.tmdb_logo),
+                    contentDescription = stringResource(R.string.tmdb_logo),
+                )
+            }
         }
-        //navigationIcon
     }
 }
+
 @Composable
 private fun BackIcon(
     onBackClick: () -> Unit,
@@ -145,10 +193,12 @@ private fun BottomNavigationBar(
             val iconResource = if (selected) destination.selectedIconId else destination.unselectedIconId
 
             BottomNavigationItem(
-                icon = { Icon(
-                    painter = painterResource(iconResource),
-                    contentDescription = stringResource(id = destination.labelId)
-                ) },
+                icon = {
+                    Icon(
+                        painter = painterResource(iconResource),
+                        contentDescription = stringResource(id = destination.labelId)
+                    )
+                },
                 label = { Text(stringResource(destination.labelId)) },
                 selected = selected,
                 onClick = {
@@ -161,7 +211,6 @@ private fun BottomNavigationBar(
 
 @Preview
 @Composable
-fun MainScreenPreview()
-{
+fun MainScreenPreview() {
     MainScreen()
 }

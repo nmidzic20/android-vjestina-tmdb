@@ -68,12 +68,10 @@ fun MovieDetailsRoute(
         )
     }
 
-    MovieAppTheme {
-        MovieDetailsScreen(
-            movieDetailsViewState,
-            onFavoriteClick,
-        )
-    }
+    MovieDetailsScreen(
+        movieDetailsViewState,
+        onFavoriteClick,
+    )
 }
 
 @Composable

@@ -1,6 +1,11 @@
 package endava.codebase.android.movieapp.ui.favorites
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
@@ -10,7 +15,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,9 +58,9 @@ val newReleasesCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState
 
 @Composable
 fun HomeRoute(
-onNavigateToMovieDetails: (Int) -> Unit
+    onNavigateToMovieDetails: (Int) -> Unit
 ) {
-    //has to be the same variable name otherwise not working?
+    // has to be the same variable name otherwise not working?
     var trendingCategoryViewState by remember { mutableStateOf(trendingCategoryViewState) }
     var newReleasesCategoryViewState by remember { mutableStateOf(newReleasesCategoryViewState) }
 
@@ -77,7 +86,6 @@ onNavigateToMovieDetails: (Int) -> Unit
                             selectedMovieCategory.itemId == movieCategory.itemId,
                             movieCategory.categoryText
                         )
-
                     },
                     movies = newReleasesCategoryViewState.movies
                 )
@@ -155,8 +163,9 @@ fun HomeScreen(
             )
         }
     }*/
-    Column(modifier = modifier
-        .verticalScroll(rememberScrollState())
+    Column(
+        modifier = modifier
+            .verticalScroll(rememberScrollState())
     ) {
         CategoryComponent(
             homeMovieCategoryViewState = homeMovieCategoryViewStateList[0],
@@ -201,13 +210,12 @@ fun CategoryComponent(
                     modifier = Modifier
                         .padding(MaterialTheme.spacing.small)
                 )
-
             })
         }
         LazyHorizontalGrid(
             rows = GridCells.Adaptive(minSize = 215.dp),
             modifier = Modifier
-                .height(209.dp) //zbog vertical scroll
+                .height(209.dp) // zbog vertical scroll
         ) {
             itemsIndexed(
                 items = homeMovieCategoryViewState.movies,
@@ -218,7 +226,7 @@ fun CategoryComponent(
                 Box(
                     Modifier
                         .width(125.dp)
-                        //.size(width = 125.dp, height = 209.dp)
+                        // .size(width = 125.dp, height = 209.dp)
                         .fillMaxSize()
                         .padding(MaterialTheme.spacing.extraSmall)
                 ) {
@@ -237,7 +245,7 @@ fun CategoryComponent(
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    //has to be the same variable name otherwise not working?
+    // has to be the same variable name otherwise not working?
     var trendingCategoryViewState by remember { mutableStateOf(trendingCategoryViewState) }
     var newReleasesCategoryViewState by remember { mutableStateOf(newReleasesCategoryViewState) }
 
@@ -263,7 +271,6 @@ fun HomeScreenPreview() {
                             selectedMovieCategory.itemId == movieCategory.itemId,
                             movieCategory.categoryText
                         )
-
                     },
                     movies = newReleasesCategoryViewState.movies
                 )
@@ -307,7 +314,6 @@ fun HomeScreenPreview() {
             movies = newReleasesMovies
         )
 
-
         /*if (trendingCategoryViewState.movies.any { it.id == selectedMovie.id })
         {
             val movies = trendingCategoryViewState.movies.toMutableList()
@@ -340,7 +346,6 @@ fun HomeScreenPreview() {
                 movies
             )
         }*/
-
     }
 
     HomeScreen(
@@ -352,5 +357,4 @@ fun HomeScreenPreview() {
         onFavoriteClick = onFavoriteClick,
         onMovieCardClick = { movieId -> println("Clicked movie card with movieId $movieId") }
     )
-
 }

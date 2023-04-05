@@ -1,7 +1,10 @@
 package endava.codebase.android.movieapp.ui.component
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -42,7 +45,7 @@ fun MovieCard(
         ) {
             AsyncImage(
                 model = movieCardViewState.imageUrl,
-            contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.FillBounds,
                 contentDescription = movieCardViewState.imageUrl,
                 modifier = Modifier
             )
@@ -66,10 +69,10 @@ private fun MovieCardPreview() {
     val movieCardViewState = remember { mutableStateOf(_movieCardViewState) }
 
     val onClick = { movieId: Int -> println("Movie card clicked") }
-    val onFavoriteClick = { _movieCardViewState: MovieCardViewState ->
+    val onFavoriteClick = { movieFavorited: MovieCardViewState ->
         movieCardViewState.value = MovieCardViewState(
-            _movieCardViewState.imageUrl,
-            !_movieCardViewState.isFavorite
+            movieFavorited.imageUrl,
+            !movieFavorited.isFavorite
         )
     }
 
