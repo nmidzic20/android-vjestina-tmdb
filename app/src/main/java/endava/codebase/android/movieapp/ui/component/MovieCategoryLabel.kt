@@ -33,7 +33,7 @@ sealed class MovieCategoryLabelTextViewState {
 fun MovieCategoryLabel(
     movieCategoryLabelViewState: MovieCategoryLabelViewState,
     modifier: Modifier = Modifier,
-    onClick: (Int) -> Unit,
+    onClick: (MovieCategoryLabelViewState) -> Unit,
 ) {
 
     val textContent: String =
@@ -61,7 +61,7 @@ fun MovieCategoryLabel(
         fontWeight = fontWeight,
         style = style,
         modifier = modifier
-            .clickable { onClick(movieCategoryLabelViewState.itemId) }
+            .clickable { onClick(movieCategoryLabelViewState) }
     )
 }
 
@@ -80,7 +80,7 @@ private fun MovieCategoryLabelPreview() {
         )
     }
 
-    val onClick = { selectedId: Int ->
+    val onClick = { selectedMovieCategory: MovieCategoryLabelViewState ->
         val iterate = movieCategoryLabelViewStateList.listIterator()
         while (iterate.hasNext()) {
             val oldValue = iterate.next()
@@ -88,7 +88,7 @@ private fun MovieCategoryLabelPreview() {
                 MovieCategoryLabelViewState(
                     itemId = oldValue.itemId,
                     categoryText = oldValue.categoryText,
-                    isSelected = oldValue.itemId == selectedId
+                    isSelected = oldValue.itemId == selectedMovieCategory.itemId
                 )
             )
         }

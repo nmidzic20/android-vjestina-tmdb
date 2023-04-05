@@ -7,4 +7,8 @@
     <string name="user_score">User score</string>
     <string name="overview">Overview</string>
     <string name="top_billed_cast">Top Billed Cast</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="now_playing">Now playing</string>
+    <string name="upcoming">Upcoming</string>
 </resources>
