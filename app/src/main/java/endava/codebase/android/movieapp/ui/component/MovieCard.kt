@@ -1,6 +1,5 @@
 package endava.codebase.android.movieapp.ui.component
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -39,7 +38,7 @@ fun MovieCard(
         elevation = MaterialTheme.spacing.small,
         onClick = onClick,
         modifier = modifier
-            //.clickable { onClick }
+        // .clickable { onClick }
     ) {
         Box(
             contentAlignment = Alignment.Center,

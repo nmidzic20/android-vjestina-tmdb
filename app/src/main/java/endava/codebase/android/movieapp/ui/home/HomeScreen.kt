@@ -63,7 +63,6 @@ val newReleasesCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState
 fun HomeRoute(
     onNavigateToMovieDetails: (Int) -> Unit
 ) {
-    // has to be the same variable name otherwise not working?
     var trendingCategory by remember { mutableStateOf(trendingCategoryViewState) }
     var newReleasesCategory by remember { mutableStateOf(newReleasesCategoryViewState) }
 
@@ -153,20 +152,6 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
 
 ) {
-    /*LazyColumn(modifier = modifier) {
-        items(
-            homeMovieCategoryViewStateList.size
-        ) { index ->
-            //Text(text = homeMovieCategoryViewStateList[index].movieCategories[0].itemId.toString())
-            CategoryComponent(
-                homeMovieCategoryViewState = homeMovieCategoryViewStateList[index],
-                onCategoryClick = onCategoryClick,
-                onFavoriteClick = onFavoriteClick,
-                title = "",
-                modifier = Modifier.padding(MaterialTheme.spacing.small)
-            )
-        }
-    }*/
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
@@ -319,39 +304,6 @@ fun HomeScreenPreview() {
             movieCategories = newReleasesCategoryViewState.movieCategories,
             movies = newReleasesMovies
         )
-
-        /*if (trendingCategoryViewState.movies.any { it.id == selectedMovie.id })
-        {
-            val movies = trendingCategoryViewState.movies.toMutableList()
-
-            movies[selectedMovie.id] = HomeMovieViewState(
-                id = movies[selectedMovie.id].id,
-                movieCardViewState = MovieCardViewState(
-                    imageUrl = movies[selectedMovie.id].movieCardViewState.imageUrl,
-                    isFavorite = !movies[selectedMovie.id].movieCardViewState.isFavorite
-                )
-            )
-            trendingCategoryViewState = HomeMovieCategoryViewState(
-                trendingCategoryViewState.movieCategories,
-                movies
-            )
-        }
-        if (newReleasesCategoryViewState.movies.any { it.id == selectedMovie.id })
-        {
-            val movies = newReleasesCategoryViewState.movies.toMutableList()
-
-            movies[selectedMovie.id] = HomeMovieViewState(
-                id = movies[selectedMovie.id].id,
-                movieCardViewState = MovieCardViewState(
-                    imageUrl = movies[selectedMovie.id].movieCardViewState.imageUrl,
-                    isFavorite = !movies[selectedMovie.id].movieCardViewState.isFavorite
-                )
-            )
-            newReleasesCategoryViewState = HomeMovieCategoryViewState(
-                newReleasesCategoryViewState.movieCategories,
-                movies
-            )
-        }*/
     }
 
     HomeScreen(

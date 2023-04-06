@@ -92,7 +92,7 @@ fun FavoritesScreen(
         ) { index, movie ->
             MovieCard(
                 movieCardViewState = favoriteMovies[index].movieCardViewState,
-                onClick = { onMovieCardClick(movie.id) }, // new lambda implementation, this function is what is really called form movieCard
+                onClick = { onMovieCardClick(movie.id) },
                 onFavoriteClick = { onFavoriteClick(index) },
                 modifier = Modifier
                     .height(179.dp)
@@ -112,26 +112,7 @@ fun FavoritesScreenPreview() {
 
     val onFavoriteClick = { index: Int ->
         val favoriteMovies = favoritesViewState.favoritesMovieViewStateList.toMutableList()
-        /*
-        // if passing selectedId instead of index:
-        val iterate = favoriteMovies.listIterator()
-        while (iterate.hasNext()) {
-            val oldValue = iterate.next()
-            iterate.set(
-                FavoritesMovieViewState(
-                    id = oldValue.id,
-                    movieCardViewState = MovieCardViewState(
-                        imageUrl = oldValue.movieCardViewState.imageUrl,
-                        isFavorite =
-                        if (selectedId == oldValue.id)
-                            !oldValue.movieCardViewState.isFavorite
-                        else
-                            oldValue.movieCardViewState.isFavorite
-                    )
-                )
-            )
-        }
-        */
+
         favoriteMovies[index] = FavoritesMovieViewState(
             id = favoriteMovies[index].id,
             movieCardViewState = MovieCardViewState(

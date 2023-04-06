@@ -17,7 +17,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -50,40 +53,15 @@ fun MainScreen() {
         derivedStateOf {
             when (navBackStackEntry?.destination?.route) {
                 MovieDetailsDestination.route -> {
-                    println("Current route ${navBackStackEntry?.destination?.route}")
                     false
                 }
                 else -> {
-                    println("Current route ${navBackStackEntry?.destination?.route}")
                     true
                 }
             }
         }
-        //mutableStateOf(true)
     }
     val showBackIcon = !showBottomBar
-
-    /* above - showBackIcon an ordinary bool, is recreated each time recomposition (calling of MainScreen function) happens
-    * while showBottomBar gets reference because of by remember, and this reference is not recreated because of remember keeping
-    * track of the same reference
-    * derivedStateOf is executed each time something we keep track of (here navBackStackEntry) changes */
-
-    //val showBackIcon: Boolean
-
-    // Since we are subscribed to navBackStackEntry, this will execute each time
-    // there is a new entry to the stack (each time route is changed)
-    /*when (navBackStackEntry?.destination?.route) {
-        MovieDetailsDestination.route -> {
-            println("Current route ${navBackStackEntry?.destination?.route}")
-            showBottomBar = false
-            showBackIcon = !showBottomBar
-        }
-        else -> {
-            println("Current route ${navBackStackEntry?.destination?.route}")
-            showBottomBar = true
-            showBackIcon = !showBottomBar
-        }
-    }*/
 
     Scaffold(
         topBar = {
@@ -102,15 +80,9 @@ fun MainScreen() {
                     ),
                     onNavigateToDestination = { destination ->
                         navController.navigate(destination.route) {
-                            // Remove all destinations from back stack until we get to startDestination,
-                            // to prevent unnecessary stacking, since Home & Favorite screens are
-                            // only meant for switching between the two, and we also need to enable
-                            // exit from the app if back button pressed anytime on start destination (HomeScreen)
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }
-                            // Only one copy of destination (this is in case we click on the same
-                            // icon again, to prevent unnecessary stacking)
                             launchSingleTop = true
                             restoreState = true
                         }
@@ -132,7 +104,6 @@ fun MainScreen() {
                     HomeRoute(
                         onNavigateToMovieDetails = { movieId ->
                             val movieRoute = MovieDetailsDestination.createNavigationRoute(movieId)
-                            println("MOVIE ROUTE $movieRoute")
                             navController.navigate(movieRoute)
                         },
                     )
@@ -141,7 +112,6 @@ fun MainScreen() {
                     FavoritesRoute(
                         onNavigateToMovieDetails = { movieId ->
                             val movieRoute = MovieDetailsDestination.createNavigationRoute(movieId)
-                            println("MOVIE ROUTE $movieRoute")
                             navController.navigate(movieRoute)
                         },
                     )
@@ -150,8 +120,6 @@ fun MainScreen() {
                     route = MovieDetailsDestination.route,
                     arguments = listOf(navArgument(MOVIE_ID_KEY) { type = NavType.IntType }),
                 ) {
-                    // will need to pass this movieId argument to MovieDetailsRoute once we switch from mock MovieDetails to real ones
-                    println("Selected movie ${it.arguments?.getInt(MOVIE_ID_KEY)}")
                     MovieDetailsRoute()
                 }
             }

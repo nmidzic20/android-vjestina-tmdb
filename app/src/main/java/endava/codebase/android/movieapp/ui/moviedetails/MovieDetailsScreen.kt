@@ -1,9 +1,14 @@
 package endava.codebase.android.movieapp.ui.moviedetails
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -227,24 +232,6 @@ fun Crew(
             }
         }
     }
-    //fiksni grid 3x2, samo prvih 6 - gore
-    /*LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
-        modifier = modifier
-            .height(120.dp)
-    ) {
-        itemsIndexed(
-            items = crewmanViewStateList,
-            key = { _, crewman ->
-                crewman.id
-            }
-        ) { _, crewmanViewState ->
-            CrewItem(
-                crewmanViewState.crewItemViewState,
-                Modifier.padding(MaterialTheme.spacing.extraSmall)
-            )
-        }
-    }*/
 }
 
 @Composable

@@ -35,7 +35,7 @@ class HomeScreenMapperImpl : HomeScreenMapper {
         return HomeMovieCategoryViewState(_movieCategories, _movies)
     }
 
-    private fun getStringResource(movieCategory: MovieCategory) : Int {
+    private fun getStringResource(movieCategory: MovieCategory): Int {
 
         return when (movieCategory.ordinal) {
             MovieCategory.POPULAR.ordinal ->
