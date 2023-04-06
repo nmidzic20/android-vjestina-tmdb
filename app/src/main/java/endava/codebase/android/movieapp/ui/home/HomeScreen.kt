@@ -21,9 +21,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import endava.codebase.android.movieapp.R
 import endava.codebase.android.movieapp.mock.MoviesMock
 import endava.codebase.android.movieapp.model.MovieCategory
 import endava.codebase.android.movieapp.ui.component.MovieCard
@@ -61,13 +64,13 @@ fun HomeRoute(
     onNavigateToMovieDetails: (Int) -> Unit
 ) {
     // has to be the same variable name otherwise not working?
-    var trendingCategoryViewState by remember { mutableStateOf(trendingCategoryViewState) }
-    var newReleasesCategoryViewState by remember { mutableStateOf(newReleasesCategoryViewState) }
+    var trendingCategory by remember { mutableStateOf(trendingCategoryViewState) }
+    var newReleasesCategory by remember { mutableStateOf(newReleasesCategoryViewState) }
 
     val onCategoryClick = { selectedMovieCategory: MovieCategoryLabelViewState ->
         when (selectedMovieCategory.itemId) {
             MovieCategory.POPULAR.ordinal, MovieCategory.TOP_RATED.ordinal -> {
-                trendingCategoryViewState = HomeMovieCategoryViewState(
+                trendingCategory = HomeMovieCategoryViewState(
                     movieCategories = trendingCategoryViewState.movieCategories.map { movieCategory ->
                         MovieCategoryLabelViewState(
                             movieCategory.itemId,
@@ -79,7 +82,7 @@ fun HomeRoute(
                 )
             }
             MovieCategory.NOW_PLAYING.ordinal, MovieCategory.UPCOMING.ordinal -> {
-                newReleasesCategoryViewState = HomeMovieCategoryViewState(
+                newReleasesCategory = HomeMovieCategoryViewState(
                     movieCategories = newReleasesCategoryViewState.movieCategories.map { movieCategory ->
                         MovieCategoryLabelViewState(
                             movieCategory.itemId,
@@ -120,11 +123,11 @@ fun HomeRoute(
             )
         }
 
-        trendingCategoryViewState = HomeMovieCategoryViewState(
+        trendingCategory = HomeMovieCategoryViewState(
             movieCategories = trendingCategoryViewState.movieCategories,
             movies = trendingMovies
         )
-        newReleasesCategoryViewState = HomeMovieCategoryViewState(
+        newReleasesCategory = HomeMovieCategoryViewState(
             movieCategories = newReleasesCategoryViewState.movieCategories,
             movies = newReleasesMovies
         )
@@ -132,8 +135,8 @@ fun HomeRoute(
 
     HomeScreen(
         homeMovieCategoryViewStateList = listOf(
-            trendingCategoryViewState,
-            newReleasesCategoryViewState
+            trendingCategory,
+            newReleasesCategory
         ),
         onCategoryClick = onCategoryClick,
         onFavoriteClick = onFavoriteClick,
@@ -146,8 +149,9 @@ fun HomeScreen(
     homeMovieCategoryViewStateList: List<HomeMovieCategoryViewState>,
     onCategoryClick: (MovieCategoryLabelViewState) -> Unit,
     onFavoriteClick: (MovieCardViewState) -> Unit,
+    onMovieCardClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    onMovieCardClick: (Int) -> Unit
+
 ) {
     /*LazyColumn(modifier = modifier) {
         items(
@@ -172,7 +176,7 @@ fun HomeScreen(
             onCategoryClick = onCategoryClick,
             onFavoriteClick = onFavoriteClick,
             onMovieCardClick = onMovieCardClick,
-            title = "Trending movies",
+            title = stringResource(R.string.trending_movies),
             modifier = Modifier.padding(MaterialTheme.spacing.small)
         )
         CategoryComponent(
@@ -180,7 +184,7 @@ fun HomeScreen(
             onCategoryClick = onCategoryClick,
             onFavoriteClick = onFavoriteClick,
             onMovieCardClick = onMovieCardClick,
-            title = "New releases",
+            title = stringResource(R.string.new_releases),
             modifier = Modifier.padding(MaterialTheme.spacing.small)
         )
     }
@@ -198,6 +202,8 @@ fun CategoryComponent(
     Column(modifier = modifier) {
         Text(
             text = title,
+            color = MaterialTheme.colors.primary,
+            fontSize = 25.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(MaterialTheme.spacing.small)
@@ -232,7 +238,7 @@ fun CategoryComponent(
                 ) {
                     MovieCard(
                         movieCardViewState = movie.movieCardViewState,
-                        onClick = onMovieCardClick,
+                        onClick = { onMovieCardClick(movie.id) },
                         onFavoriteClick = onFavoriteClick,
 
                     )

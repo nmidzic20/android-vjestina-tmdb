@@ -1,5 +1,6 @@
 package endava.codebase.android.movieapp.ui.favorites
 
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -51,9 +52,9 @@ fun FavoritesRoute(
     }
 
     FavoritesScreen(
-        favoritesViewState,
-        onNavigateToMovieDetails,
-        onFavoriteClick,
+        favoritesViewState = favoritesViewState,
+        onMovieCardClick = onNavigateToMovieDetails,
+        onFavoriteClick = onFavoriteClick,
     )
 }
 
@@ -91,9 +92,11 @@ fun FavoritesScreen(
         ) { index, movie ->
             MovieCard(
                 movieCardViewState = favoriteMovies[index].movieCardViewState,
-                onClick = { onMovieCardClick(movie.id) },
+                onClick = { onMovieCardClick(movie.id) }, // new lambda implementation, this function is what is really called form movieCard
                 onFavoriteClick = { onFavoriteClick(index) },
-                modifier = Modifier.padding(MaterialTheme.spacing.small)
+                modifier = Modifier
+                    .height(179.dp)
+                    .padding(MaterialTheme.spacing.small)
             )
         }
     }

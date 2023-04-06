@@ -12,4 +12,6 @@
     <string name="now_playing">Now playing</string>
     <string name="upcoming">Upcoming</string>
     <string name="back">Back</string>
+    <string name="trending_movies">Trending movies</string>
+    <string name="new_releases">New releases</string>
 </resources>

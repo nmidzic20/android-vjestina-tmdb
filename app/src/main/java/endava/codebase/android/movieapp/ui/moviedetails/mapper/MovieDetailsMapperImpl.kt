@@ -23,7 +23,7 @@ class MovieDetailsMapperImpl : MovieDetailsMapper {
             ActorViewState(
                 actor.id,
                 ActorCardViewState(
-                    actor.imageUrl ?: "",
+                    actor.imageUrl.orEmpty(),
                     actor.name,
                     actor.character,
                 )
@@ -32,7 +32,7 @@ class MovieDetailsMapperImpl : MovieDetailsMapper {
 
         return MovieDetailsViewState(
             id = movieDetails.movie.id,
-            imageUrl = movieDetails.movie.imageUrl ?: "",
+            imageUrl = movieDetails.movie.imageUrl.orEmpty(),
             voteAverage = movieDetails.voteAverage,
             title = movieDetails.movie.title,
             overview = movieDetails.movie.overview,

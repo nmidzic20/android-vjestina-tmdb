@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -25,18 +26,20 @@ data class MovieCardViewState(
     val isFavorite: Boolean,
 )
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MovieCard(
     movieCardViewState: MovieCardViewState,
-    onClick: (Int) -> Unit,
+    onClick: () -> Unit,
     onFavoriteClick: (MovieCardViewState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
         shape = RoundedCornerShape(MaterialTheme.spacing.medium),
         elevation = MaterialTheme.spacing.small,
+        onClick = onClick,
         modifier = modifier
-            .clickable { onClick(1) } // since I cannot pass movieId here?
+            //.clickable { onClick }
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -45,7 +48,7 @@ fun MovieCard(
         ) {
             AsyncImage(
                 model = movieCardViewState.imageUrl,
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.Crop,
                 contentDescription = movieCardViewState.imageUrl,
                 modifier = Modifier
             )
@@ -68,7 +71,7 @@ private fun MovieCardPreview() {
     val _movieCardViewState = MovieCardViewState(movieDetails.movie.imageUrl, movieDetails.movie.isFavorite)
     val movieCardViewState = remember { mutableStateOf(_movieCardViewState) }
 
-    val onClick = { movieId: Int -> println("Movie card clicked") }
+    val onClick = { println("Movie card clicked") }
     val onFavoriteClick = { movieFavorited: MovieCardViewState ->
         movieCardViewState.value = MovieCardViewState(
             movieFavorited.imageUrl,

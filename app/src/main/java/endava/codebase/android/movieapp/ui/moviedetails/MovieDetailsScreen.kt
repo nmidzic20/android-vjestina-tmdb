@@ -1,12 +1,6 @@
 package endava.codebase.android.movieapp.ui.moviedetails
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -208,7 +202,33 @@ fun Crew(
 ) {
     val crewmanViewStateList = movieDetailsViewState.crew
 
-    LazyVerticalGrid(
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Row() {
+            for (i in 0..2) {
+                crewmanViewStateList.getOrNull(i)?.let {
+                    CrewItem(
+                        it.crewItemViewState,
+                        Modifier.padding(MaterialTheme.spacing.small)
+                    )
+                }
+            }
+        }
+        Row() {
+            for (i in 3..5) {
+                crewmanViewStateList.getOrNull(i)?.let {
+                    CrewItem(
+                        it.crewItemViewState,
+                        Modifier.padding(MaterialTheme.spacing.small)
+                    )
+                }
+            }
+        }
+    }
+    //fiksni grid 3x2, samo prvih 6 - gore
+    /*LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         modifier = modifier
             .height(120.dp)
@@ -224,7 +244,7 @@ fun Crew(
                 Modifier.padding(MaterialTheme.spacing.extraSmall)
             )
         }
-    }
+    }*/
 }
 
 @Composable

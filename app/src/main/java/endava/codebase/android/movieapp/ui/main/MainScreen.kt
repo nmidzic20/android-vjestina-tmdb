@@ -17,11 +17,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -50,23 +46,44 @@ fun MainScreen() {
     val navController = rememberNavController()
     // Subscribe to navStackBackEntry to get current route
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    var showBottomBar by remember {
-        mutableStateOf(true)
+    val showBottomBar by remember {
+        derivedStateOf {
+            when (navBackStackEntry?.destination?.route) {
+                MovieDetailsDestination.route -> {
+                    println("Current route ${navBackStackEntry?.destination?.route}")
+                    false
+                }
+                else -> {
+                    println("Current route ${navBackStackEntry?.destination?.route}")
+                    true
+                }
+            }
+        }
+        //mutableStateOf(true)
     }
-    val showBackIcon: Boolean
+    val showBackIcon = !showBottomBar
+
+    /* above - showBackIcon an ordinary bool, is recreated each time recomposition (calling of MainScreen function) happens
+    * while showBottomBar gets reference because of by remember, and this reference is not recreated because of remember keeping
+    * track of the same reference
+    * derivedStateOf is executed each time something we keep track of (here navBackStackEntry) changes */
+
+    //val showBackIcon: Boolean
 
     // Since we are subscribed to navBackStackEntry, this will execute each time
     // there is a new entry to the stack (each time route is changed)
-    when (navBackStackEntry?.destination?.route) {
+    /*when (navBackStackEntry?.destination?.route) {
         MovieDetailsDestination.route -> {
+            println("Current route ${navBackStackEntry?.destination?.route}")
             showBottomBar = false
             showBackIcon = !showBottomBar
         }
         else -> {
+            println("Current route ${navBackStackEntry?.destination?.route}")
             showBottomBar = true
             showBackIcon = !showBottomBar
         }
-    }
+    }*/
 
     Scaffold(
         topBar = {

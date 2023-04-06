@@ -20,17 +20,7 @@ class HomeScreenMapperImpl : HomeScreenMapper {
             MovieCategoryLabelViewState(
                 itemId = movieCategory.ordinal,
                 isSelected = selectedMovieCategory.ordinal == movieCategory.ordinal,
-                categoryText = when (movieCategory.ordinal) {
-                    MovieCategory.POPULAR.ordinal ->
-                        MovieCategoryLabelTextViewState.TextStringResource(R.string.popular)
-                    MovieCategory.TOP_RATED.ordinal ->
-                        MovieCategoryLabelTextViewState.TextStringResource(R.string.top_rated)
-                    MovieCategory.NOW_PLAYING.ordinal ->
-                        MovieCategoryLabelTextViewState.TextStringResource(R.string.now_playing)
-                    else -> {
-                        MovieCategoryLabelTextViewState.TextStringResource(R.string.upcoming)
-                    }
-                }
+                categoryText = MovieCategoryLabelTextViewState.TextStringResource(getStringResource(movieCategory))
             )
         }
         val _movies: List<HomeMovieViewState> = movies.map { movie ->
@@ -43,5 +33,20 @@ class HomeScreenMapperImpl : HomeScreenMapper {
             )
         }
         return HomeMovieCategoryViewState(_movieCategories, _movies)
+    }
+
+    private fun getStringResource(movieCategory: MovieCategory) : Int {
+
+        return when (movieCategory.ordinal) {
+            MovieCategory.POPULAR.ordinal ->
+                R.string.popular
+            MovieCategory.TOP_RATED.ordinal ->
+                R.string.top_rated
+            MovieCategory.NOW_PLAYING.ordinal ->
+                R.string.now_playing
+            else -> {
+                R.string.upcoming
+            }
+        }
     }
 }
