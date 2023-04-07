@@ -47,8 +47,8 @@ import endava.codebase.android.movieapp.ui.theme.spacing
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    // Subscribe to navStackBackEntry to get current route
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+
     val showBottomBar by remember {
         derivedStateOf {
             when (navBackStackEntry?.destination?.route) {

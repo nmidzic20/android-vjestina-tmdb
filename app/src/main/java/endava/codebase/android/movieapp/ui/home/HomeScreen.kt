@@ -41,7 +41,6 @@ import endava.codebase.android.movieapp.ui.theme.spacing
 
 private val homeScreenMapper: HomeScreenMapper = HomeScreenMapperImpl()
 
-// multiple view states if required
 val trendingCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState(
     movieCategories = listOf(
         MovieCategory.POPULAR,
@@ -236,7 +235,6 @@ fun CategoryComponent(
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    // has to be the same variable name otherwise not working?
     var trendingCategoryViewState by remember { mutableStateOf(trendingCategoryViewState) }
     var newReleasesCategoryViewState by remember { mutableStateOf(newReleasesCategoryViewState) }
 

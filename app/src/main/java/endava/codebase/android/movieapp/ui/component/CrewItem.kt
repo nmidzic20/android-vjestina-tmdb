@@ -26,12 +26,10 @@ fun CrewItem(
             text = crewItemViewState.name,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colors.onBackground,
-            modifier = Modifier
         )
         Text(
             text = crewItemViewState.job,
             color = MaterialTheme.colors.onBackground,
-            modifier = Modifier
         )
     }
 }

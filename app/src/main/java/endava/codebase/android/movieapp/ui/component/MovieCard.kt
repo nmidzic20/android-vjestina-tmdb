@@ -38,7 +38,6 @@ fun MovieCard(
         elevation = MaterialTheme.spacing.small,
         onClick = onClick,
         modifier = modifier
-        // .clickable { onClick }
     ) {
         Box(
             contentAlignment = Alignment.Center,

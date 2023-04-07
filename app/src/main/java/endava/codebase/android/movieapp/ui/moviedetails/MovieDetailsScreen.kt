@@ -45,14 +45,10 @@ import endava.codebase.android.movieapp.ui.theme.MovieAppTheme
 import endava.codebase.android.movieapp.ui.theme.spacing
 
 private val movieDetailsMapper: MovieDetailsMapper = MovieDetailsMapperImpl()
-
-// multiple view states if required
 val movieDetailsViewState = movieDetailsMapper.toMovieDetailsViewState(MoviesMock.getMovieDetails())
 
 @Composable
-fun MovieDetailsRoute(
-// actions
-) {
+fun MovieDetailsRoute() {
     var movieDetailsViewState by remember { mutableStateOf(movieDetailsViewState) }
     val onFavoriteClick = {
         movieDetailsViewState = MovieDetailsViewState(

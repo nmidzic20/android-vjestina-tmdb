@@ -28,8 +28,6 @@ import endava.codebase.android.movieapp.ui.theme.MovieAppTheme
 import endava.codebase.android.movieapp.ui.theme.spacing
 
 private val favoritesMapper: FavoritesMapper = FavoritesMapperImpl()
-
-// multiple view states if required
 val favoritesViewState = favoritesMapper.toFavoritesViewState(MoviesMock.getMoviesList())
 
 @Composable
