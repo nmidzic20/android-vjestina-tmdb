@@ -149,7 +149,6 @@ fun HomeScreen(
     onFavoriteClick: (MovieCardViewState) -> Unit,
     onMovieCardClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
-
 ) {
     Column(
         modifier = modifier

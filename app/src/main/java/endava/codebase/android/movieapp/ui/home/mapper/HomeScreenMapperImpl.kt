@@ -35,14 +35,14 @@ class HomeScreenMapperImpl : HomeScreenMapper {
         return HomeMovieCategoryViewState(_movieCategories, _movies)
     }
 
-    private fun getStringResource(movieCategory: MovieCategory): Int = when (movieCategory.ordinal) {
-        MovieCategory.POPULAR.ordinal ->
+    private fun getStringResource(movieCategory: MovieCategory): Int = when (movieCategory) {
+        MovieCategory.POPULAR ->
             R.string.popular
-        MovieCategory.TOP_RATED.ordinal ->
+        MovieCategory.TOP_RATED ->
             R.string.top_rated
-        MovieCategory.NOW_PLAYING.ordinal ->
+        MovieCategory.NOW_PLAYING ->
             R.string.now_playing
-        else -> {
+        MovieCategory.UPCOMING -> {
             R.string.upcoming
         }
     }
