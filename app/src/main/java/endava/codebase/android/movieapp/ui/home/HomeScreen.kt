@@ -198,10 +198,7 @@ fun CategoryComponent(
                 )
             })
         }
-        LazyRow(
-            modifier = Modifier
-                .height(209.dp)
-        ) {
+        LazyRow() {
             items(
                 items = homeMovieCategoryViewState.movies,
                 itemContent = { movie ->
@@ -215,7 +212,8 @@ fun CategoryComponent(
                             movieCardViewState = movie.movieCardViewState,
                             onClick = { onMovieCardClick(movie.id) },
                             onFavoriteClick = onFavoriteClick,
-
+                            modifier = Modifier
+                                .height(209.dp)
                         )
                     }
                 }
