@@ -1,4 +1,17 @@
 <resources>
     <string name="app_name">MovieApp</string>
     <string name="movie_category">Movies2</string>
+    <string name="tmdb_logo">TMDB logo</string>
+    <string name="home">Home</string>
+    <string name="favorites">Favorites</string>
+    <string name="user_score">User score</string>
+    <string name="overview">Overview</string>
+    <string name="top_billed_cast">Top Billed Cast</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="now_playing">Now playing</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="back">Back</string>
+    <string name="trending_movies">Trending movies</string>
+    <string name="new_releases">New releases</string>
 </resources>
