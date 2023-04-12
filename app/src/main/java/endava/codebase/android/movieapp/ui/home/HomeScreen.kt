@@ -199,7 +199,6 @@ fun CategoryComponent(
             })
         }
         LazyRow(
-            // rows = GridCells.Adaptive(minSize = 215.dp),
             modifier = Modifier
                 .height(209.dp)
         ) {
