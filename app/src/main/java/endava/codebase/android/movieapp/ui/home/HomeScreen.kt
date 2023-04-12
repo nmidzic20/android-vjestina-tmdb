@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -176,10 +173,10 @@ fun HomeScreen(
 @Composable
 fun CategoryComponent(
     homeMovieCategoryViewState: HomeMovieCategoryViewState,
+    title: String,
     onCategoryClick: (MovieCategoryLabelViewState) -> Unit,
     onFavoriteClick: (MovieCardViewState) -> Unit,
     onMovieCardClick: (Int) -> Unit,
-    title: String,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
@@ -201,32 +198,29 @@ fun CategoryComponent(
                 )
             })
         }
-        LazyHorizontalGrid(
-            rows = GridCells.Adaptive(minSize = 215.dp),
+        LazyRow(
+            // rows = GridCells.Adaptive(minSize = 215.dp),
             modifier = Modifier
-                .height(209.dp) // zbog vertical scroll
+                .height(209.dp)
         ) {
-            itemsIndexed(
+            items(
                 items = homeMovieCategoryViewState.movies,
-                key = { _, movie ->
-                    movie.id
-                }
-            ) { _, movie ->
-                Box(
-                    Modifier
-                        .width(125.dp)
-                        // .size(width = 125.dp, height = 209.dp)
-                        .fillMaxSize()
-                        .padding(MaterialTheme.spacing.extraSmall)
-                ) {
-                    MovieCard(
-                        movieCardViewState = movie.movieCardViewState,
-                        onClick = { onMovieCardClick(movie.id) },
-                        onFavoriteClick = onFavoriteClick,
+                itemContent = { movie ->
+                    Box(
+                        Modifier
+                            .width(125.dp)
+                            .fillMaxSize()
+                            .padding(MaterialTheme.spacing.extraSmall)
+                    ) {
+                        MovieCard(
+                            movieCardViewState = movie.movieCardViewState,
+                            onClick = { onMovieCardClick(movie.id) },
+                            onFavoriteClick = onFavoriteClick,
 
-                    )
+                        )
+                    }
                 }
-            }
+            )
         }
     }
 }
