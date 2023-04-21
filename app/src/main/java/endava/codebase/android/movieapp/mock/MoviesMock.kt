@@ -74,6 +74,29 @@ object MoviesMock {
         },
     )
 
+    fun getMovieDetails(movieId: Int): MovieDetails = MovieDetails(
+        movie = getMoviesList().first { it.id == movieId },
+        voteAverage = 8.1f,
+        releaseDate = "17/12/2021",
+        language = "US",
+        runtime = 148,
+        crew = List(6) {
+            Crewman(
+                id = it,
+                name = "Jon Watts",
+                job = "Director",
+            )
+        },
+        cast = List(6) {
+            Actor(
+                id = it,
+                name = "Tom Holland",
+                character = "Peter Parker / Spider-Man",
+                imageUrl = "https://image.tmdb.org/t/p/w200/bBRlrpJm9XkNSg0YT5LCaxqoFMX.jpg"
+            )
+        },
+    )
+
     fun getCrewman(): Crewman = Crewman(
         id = 1,
         name = "Jon Favreau",
