@@ -40,9 +40,12 @@ import endava.codebase.android.movieapp.navigation.MOVIE_ID_KEY
 import endava.codebase.android.movieapp.navigation.MovieDetailsDestination
 import endava.codebase.android.movieapp.navigation.NavigationItem
 import endava.codebase.android.movieapp.ui.favorites.FavoritesRoute
+import endava.codebase.android.movieapp.ui.favorites.FavoritesViewModel
 import endava.codebase.android.movieapp.ui.favorites.HomeRoute
 import endava.codebase.android.movieapp.ui.moviedetails.MovieDetailsRoute
 import endava.codebase.android.movieapp.ui.theme.spacing
+import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
 
 @Composable
 fun MainScreen() {
@@ -114,6 +117,7 @@ fun MainScreen() {
                             val movieRoute = MovieDetailsDestination.createNavigationRoute(movieId)
                             navController.navigate(movieRoute)
                         },
+                        viewModel = getViewModel<FavoritesViewModel>()
                     )
                 }
                 composable(
