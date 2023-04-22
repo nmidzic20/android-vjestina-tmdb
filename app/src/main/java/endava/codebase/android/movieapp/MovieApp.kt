@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import endava.codebase.android.movieapp.data.di.dataModule
 import endava.codebase.android.movieapp.ui.favorites.di.favoritesModule
+import endava.codebase.android.movieapp.ui.home.di.homeCategoryModule
 import endava.codebase.android.movieapp.ui.moviedetails.di.movieDetailsModule
 import org.koin.core.context.startKoin
 
@@ -15,7 +16,8 @@ class MovieApp : Application() {
             modules(
                 dataModule,
                 favoritesModule,
-                movieDetailsModule
+                movieDetailsModule,
+                homeCategoryModule
             )
         }
 

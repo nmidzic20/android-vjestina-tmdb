@@ -12,11 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,6 +26,7 @@ import endava.codebase.android.movieapp.ui.component.MovieCard
 import endava.codebase.android.movieapp.ui.component.MovieCardViewState
 import endava.codebase.android.movieapp.ui.component.MovieCategoryLabel
 import endava.codebase.android.movieapp.ui.component.MovieCategoryLabelViewState
+import endava.codebase.android.movieapp.ui.home.HomeCategoryViewModel
 import endava.codebase.android.movieapp.ui.home.HomeMovieCategoryViewState
 import endava.codebase.android.movieapp.ui.home.HomeMovieViewState
 import endava.codebase.android.movieapp.ui.home.mapper.HomeScreenMapper
@@ -57,9 +54,10 @@ val newReleasesCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState
 
 @Composable
 fun HomeRoute(
-    onNavigateToMovieDetails: (Int) -> Unit
+    onNavigateToMovieDetails: (Int) -> Unit,
+    viewModel: HomeCategoryViewModel
 ) {
-    var trendingCategory by remember { mutableStateOf(trendingCategoryViewState) }
+    /*var trendingCategory by remember { mutableStateOf(trendingCategoryViewState) }
     var newReleasesCategory by remember { mutableStateOf(newReleasesCategoryViewState) }
 
     val onCategoryClick = { selectedMovieCategory: MovieCategoryLabelViewState ->
@@ -126,15 +124,17 @@ fun HomeRoute(
             movieCategories = newReleasesCategoryViewState.movieCategories,
             movies = newReleasesMovies
         )
-    }
+    }*/
+    val trendingCategoryViewState: HomeMovieCategoryViewState by viewModel.trendingCategoryViewState.collectAsState()
+    val newReleasesCategoryViewState: HomeMovieCategoryViewState by viewModel.newReleasesCategory.collectAsState()
 
     HomeScreen(
         homeMovieCategoryViewStateList = listOf(
-            trendingCategory,
-            newReleasesCategory
+            trendingCategoryViewState,
+            newReleasesCategoryViewState
         ),
-        onCategoryClick = onCategoryClick,
-        onFavoriteClick = onFavoriteClick,
+        onCategoryClick = viewModel::onCategoryClick,
+        onFavoriteClick = viewModel::onFavoriteClick,
         onMovieCardClick = onNavigateToMovieDetails,
     )
 }
@@ -143,7 +143,7 @@ fun HomeRoute(
 fun HomeScreen(
     homeMovieCategoryViewStateList: List<HomeMovieCategoryViewState>,
     onCategoryClick: (MovieCategoryLabelViewState) -> Unit,
-    onFavoriteClick: (MovieCardViewState) -> Unit,
+    onFavoriteClick: (Int) -> Unit,
     onMovieCardClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -175,7 +175,7 @@ fun CategoryComponent(
     homeMovieCategoryViewState: HomeMovieCategoryViewState,
     title: String,
     onCategoryClick: (MovieCategoryLabelViewState) -> Unit,
-    onFavoriteClick: (MovieCardViewState) -> Unit,
+    onFavoriteClick: (Int) -> Unit,
     onMovieCardClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -211,7 +211,7 @@ fun CategoryComponent(
                         MovieCard(
                             movieCardViewState = movie.movieCardViewState,
                             onClick = { onMovieCardClick(movie.id) },
-                            onFavoriteClick = onFavoriteClick,
+                            onFavoriteClick = { onFavoriteClick(movie.id) },
                             modifier = Modifier
                                 .height(209.dp)
                         )
@@ -225,7 +225,7 @@ fun CategoryComponent(
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    var trendingCategoryViewState by remember { mutableStateOf(trendingCategoryViewState) }
+    /*var trendingCategoryViewState by remember { mutableStateOf(trendingCategoryViewState) }
     var newReleasesCategoryViewState by remember { mutableStateOf(newReleasesCategoryViewState) }
 
     val onCategoryClick = { selectedMovieCategory: MovieCategoryLabelViewState ->
@@ -302,5 +302,5 @@ fun HomeScreenPreview() {
         onCategoryClick = onCategoryClick,
         onFavoriteClick = onFavoriteClick,
         onMovieCardClick = { movieId -> println("Clicked movie card with movieId $movieId") }
-    )
+    )*/
 }

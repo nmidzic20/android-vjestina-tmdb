@@ -119,6 +119,7 @@ fun MainScreen() {
                             val movieRoute = MovieDetailsDestination.createNavigationRoute(movieId)
                             navController.navigate(movieRoute)
                         },
+                        viewModel = getViewModel()
                     )
                 }
                 composable(NavigationItem.FavoritesDestination.route) {
