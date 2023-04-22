@@ -17,14 +17,14 @@ object FavoritesDBMock {
     }
 
     fun insert(movieId: Int) {
-        println("Insert before "+_favoriteIds.value)
+        println("Insert before " + _favoriteIds.value)
         _favoriteIds.value = _favoriteIds.value + setOf(movieId)
-        println("Insert after "+_favoriteIds.value)
+        println("Insert after " + _favoriteIds.value)
     }
 
     fun delete(movieId: Int) {
-        println("Delete before "+_favoriteIds.value)
+        println("Delete before " + _favoriteIds.value)
         _favoriteIds.value = _favoriteIds.value.filter { id -> id != movieId }.toSet()
-        println("Delete after "+_favoriteIds.value)
+        println("Delete after " + _favoriteIds.value)
     }
 }

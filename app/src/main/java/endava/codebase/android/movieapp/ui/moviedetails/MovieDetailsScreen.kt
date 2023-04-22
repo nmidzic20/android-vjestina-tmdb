@@ -14,7 +14,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -37,7 +39,6 @@ import endava.codebase.android.movieapp.ui.component.UserScore
 import endava.codebase.android.movieapp.ui.component.UserScoreProgressBar
 import endava.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetailsMapper
 import endava.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetailsMapperImpl
-import endava.codebase.android.movieapp.ui.theme.MovieAppTheme
 import endava.codebase.android.movieapp.ui.theme.spacing
 
 private val movieDetailsMapper: MovieDetailsMapper = MovieDetailsMapperImpl()
@@ -290,5 +291,4 @@ fun MovieDetailsScreenPreview() {
         )
     }
     */
-
 }

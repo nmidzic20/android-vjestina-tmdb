@@ -80,7 +80,7 @@ private fun MovieCardPreview() {
     MovieCard(
         movieCardViewState.value,
         onClick,
-        {  },
+        { },
         Modifier
             .size(width = 122.dp, height = 180.dp)
             .padding(MaterialTheme.spacing.extraSmall)

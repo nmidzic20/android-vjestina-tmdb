@@ -11,7 +11,7 @@ val movieDetailsModule = module {
         MovieDetailsViewModel(
             movieRepository = get(),
             movieDetailsMapper = get(),
-            movieId = 1//params.get()
+            movieId = 1 // params.get()
         )
     }
     single<MovieDetailsMapper> { MovieDetailsMapperImpl() }

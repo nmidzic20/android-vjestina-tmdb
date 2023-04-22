@@ -6,7 +6,6 @@ import endava.codebase.android.movieapp.data.repository.MovieRepository
 import endava.codebase.android.movieapp.mock.MoviesMock
 import endava.codebase.android.movieapp.ui.component.ActorCardViewState
 import endava.codebase.android.movieapp.ui.component.CrewItemViewState
-import endava.codebase.android.movieapp.ui.favorites.FavoritesViewState
 import endava.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetailsMapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -62,5 +61,4 @@ class MovieDetailsViewModel(
     fun onFavoriteClick(movieId: Int) {
         viewModelScope.launch { movieRepository.toggleFavorite(movieId) }
     }
-
 }

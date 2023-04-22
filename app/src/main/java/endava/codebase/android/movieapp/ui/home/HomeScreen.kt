@@ -12,7 +12,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -23,12 +25,10 @@ import endava.codebase.android.movieapp.R
 import endava.codebase.android.movieapp.mock.MoviesMock
 import endava.codebase.android.movieapp.model.MovieCategory
 import endava.codebase.android.movieapp.ui.component.MovieCard
-import endava.codebase.android.movieapp.ui.component.MovieCardViewState
 import endava.codebase.android.movieapp.ui.component.MovieCategoryLabel
 import endava.codebase.android.movieapp.ui.component.MovieCategoryLabelViewState
-import endava.codebase.android.movieapp.ui.home.HomeCategoryViewModel
 import endava.codebase.android.movieapp.ui.home.HomeMovieCategoryViewState
-import endava.codebase.android.movieapp.ui.home.HomeMovieViewState
+import endava.codebase.android.movieapp.ui.home.HomeViewModel
 import endava.codebase.android.movieapp.ui.home.mapper.HomeScreenMapper
 import endava.codebase.android.movieapp.ui.home.mapper.HomeScreenMapperImpl
 import endava.codebase.android.movieapp.ui.theme.spacing
@@ -55,7 +55,7 @@ val newReleasesCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState
 @Composable
 fun HomeRoute(
     onNavigateToMovieDetails: (Int) -> Unit,
-    viewModel: HomeCategoryViewModel
+    viewModel: HomeViewModel
 ) {
     /*var trendingCategory by remember { mutableStateOf(trendingCategoryViewState) }
     var newReleasesCategory by remember { mutableStateOf(newReleasesCategoryViewState) }

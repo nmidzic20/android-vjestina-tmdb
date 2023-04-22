@@ -6,7 +6,10 @@ import endava.codebase.android.movieapp.model.Movie
 import endava.codebase.android.movieapp.model.MovieCategory
 import endava.codebase.android.movieapp.model.MovieDetails
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 
 class FakeMovieRepository(
     private val ioDispatcher: CoroutineDispatcher,
@@ -56,7 +59,6 @@ class FakeMovieRepository(
     }
     override suspend fun removeMovieFromFavorites(movieId: Int) {
         FavoritesDBMock.delete(movieId)
-
     }
     override suspend fun toggleFavorite(movieId: Int) {
         println("MOVIEID " + movieId)

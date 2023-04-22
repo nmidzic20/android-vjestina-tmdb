@@ -48,14 +48,11 @@ import endava.codebase.android.movieapp.ui.moviedetails.MovieDetailsViewModel
 import endava.codebase.android.movieapp.ui.theme.spacing
 import org.koin.androidx.compose.getViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.compose.koinInject
-//import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
+// import org.koin.androidx.viewmodel.ext.android.viewModel
 
-//import org.koin.core.parameter.parametersOf
-//import org.koin.androidx.viewmodel.ext.android.viewModel
-//import org.koin.androidx.compose.viewModel
-
+// import org.koin.core.parameter.parametersOf
+// import org.koin.androidx.viewmodel.ext.android.viewModel
+// import org.koin.androidx.compose.viewModel
 
 @Composable
 fun MainScreen() {
