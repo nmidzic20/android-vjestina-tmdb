@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -43,9 +44,18 @@ import endava.codebase.android.movieapp.ui.favorites.FavoritesRoute
 import endava.codebase.android.movieapp.ui.favorites.FavoritesViewModel
 import endava.codebase.android.movieapp.ui.favorites.HomeRoute
 import endava.codebase.android.movieapp.ui.moviedetails.MovieDetailsRoute
+import endava.codebase.android.movieapp.ui.moviedetails.MovieDetailsViewModel
 import endava.codebase.android.movieapp.ui.theme.spacing
 import org.koin.androidx.compose.getViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.compose.koinInject
+//import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
+
+//import org.koin.core.parameter.parametersOf
+//import org.koin.androidx.viewmodel.ext.android.viewModel
+//import org.koin.androidx.compose.viewModel
+
 
 @Composable
 fun MainScreen() {
@@ -124,7 +134,12 @@ fun MainScreen() {
                     route = MovieDetailsDestination.route,
                     arguments = listOf(navArgument(MOVIE_ID_KEY) { type = NavType.IntType }),
                 ) {
-                    MovieDetailsRoute()
+                    val selectedMovieId = it.arguments?.getInt(MOVIE_ID_KEY)
+                    val movieDetailsViewModel: MovieDetailsViewModel = getViewModel() // by viewModel { parametersOf(selectedMovieId) }
+                    println("Selected movie ${it.arguments?.getInt(MOVIE_ID_KEY)}")
+                    MovieDetailsRoute(
+                        viewModel = movieDetailsViewModel
+                    )
                 }
             }
         }

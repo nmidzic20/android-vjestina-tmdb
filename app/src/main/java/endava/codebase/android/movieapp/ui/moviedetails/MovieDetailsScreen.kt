@@ -14,11 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -48,8 +44,10 @@ private val movieDetailsMapper: MovieDetailsMapper = MovieDetailsMapperImpl()
 val movieDetailsViewState = movieDetailsMapper.toMovieDetailsViewState(MoviesMock.getMovieDetails())
 
 @Composable
-fun MovieDetailsRoute() {
-    var movieDetailsViewState by remember { mutableStateOf(movieDetailsViewState) }
+fun MovieDetailsRoute(
+    viewModel: MovieDetailsViewModel,
+) {
+    /*var movieDetailsViewState by remember { mutableStateOf(movieDetailsViewState) }
     val onFavoriteClick = {
         movieDetailsViewState = MovieDetailsViewState(
             id = movieDetailsViewState.id,
@@ -61,18 +59,19 @@ fun MovieDetailsRoute() {
             crew = movieDetailsViewState.crew,
             cast = movieDetailsViewState.cast
         )
-    }
+    }*/
+    val movieDetailsViewState: MovieDetailsViewState by viewModel.movieDetailsViewState.collectAsState()
 
     MovieDetailsScreen(
         movieDetailsViewState,
-        onFavoriteClick,
+        viewModel::onFavoriteClick,
     )
 }
 
 @Composable
 fun MovieDetailsScreen(
     movieDetailsViewState: MovieDetailsViewState,
-    onFavoriteClick: () -> Unit,
+    onFavoriteClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -102,7 +101,7 @@ fun MovieDetailsScreen(
 @Composable
 fun CoverImage(
     movieDetailsViewState: MovieDetailsViewState,
-    onFavoriteClick: () -> Unit,
+    onFavoriteClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -141,7 +140,7 @@ fun CoverImage(
 @Composable
 fun CoverImageInfo(
     movieDetailsViewState: MovieDetailsViewState,
-    onFavoriteClick: () -> Unit,
+    onFavoriteClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val userScore = UserScore(movieDetailsViewState.voteAverage)
@@ -169,7 +168,7 @@ fun CoverImageInfo(
         )
         FavoriteButton(
             isFavorite = movieDetailsViewState.isFavorite,
-            onClick = onFavoriteClick,
+            onClick = { onFavoriteClick(movieDetailsViewState.id) },
             modifier = Modifier
                 .size(MaterialTheme.spacing.large)
                 .padding(MaterialTheme.spacing.extraSmall)
@@ -269,7 +268,7 @@ fun TopBilledCast(
 @Preview
 @Composable
 fun MovieDetailsScreenPreview() {
-
+/*
     var movieDetailsViewState by remember { mutableStateOf(movieDetailsViewState) }
     val onFavoriteClick = {
         movieDetailsViewState = MovieDetailsViewState(
@@ -290,4 +289,6 @@ fun MovieDetailsScreenPreview() {
             onFavoriteClick,
         )
     }
+    */
+
 }
