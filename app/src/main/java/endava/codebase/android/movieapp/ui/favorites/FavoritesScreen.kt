@@ -87,7 +87,7 @@ fun FavoritesScreen(
             MovieCard(
                 movieCardViewState = favoriteMovies[index].movieCardViewState,
                 onClick = { onMovieCardClick(movie.id) },
-                onFavoriteClick = { onFavoriteClick(index) },
+                onFavoriteClick = { onFavoriteClick(movie.id) },
                 modifier = Modifier
                     .height(179.dp)
                     .padding(MaterialTheme.spacing.small)

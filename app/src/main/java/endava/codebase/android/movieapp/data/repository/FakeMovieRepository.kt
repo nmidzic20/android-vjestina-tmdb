@@ -6,10 +6,7 @@ import endava.codebase.android.movieapp.model.Movie
 import endava.codebase.android.movieapp.model.MovieCategory
 import endava.codebase.android.movieapp.model.MovieDetails
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.*
 
 class FakeMovieRepository(
     private val ioDispatcher: CoroutineDispatcher,
@@ -18,7 +15,10 @@ class FakeMovieRepository(
 
     private val movies: Flow<List<Movie>> = FavoritesDBMock.favoriteIds
         .mapLatest { favoriteIds ->
-            fakeMovies // .filter { movie -> movie.id in favoriteIds }
+            fakeMovies.map {
+                val isFavorite = it.id in favoriteIds
+                Movie(it.id, it.title, it.overview, it.imageUrl, isFavorite)
+            }
         }
         .flowOn(ioDispatcher)
 
@@ -41,11 +41,17 @@ class FakeMovieRepository(
     }
     override suspend fun removeMovieFromFavorites(movieId: Int) {
         FavoritesDBMock.delete(movieId)
+
     }
-    override suspend fun toggleFavorite(movieId: Int) =
+    override suspend fun toggleFavorite(movieId: Int) {
+        println("MOVIEID " + movieId)
+        println("TO COMPARE " + FavoritesDBMock.favoriteIds.value)
         if (FavoritesDBMock.favoriteIds.value.contains(movieId)) {
+            println("Removing")
             removeMovieFromFavorites(movieId)
         } else {
+            println("Adding")
             addMovieToFavorites(movieId)
         }
+    }
 }
