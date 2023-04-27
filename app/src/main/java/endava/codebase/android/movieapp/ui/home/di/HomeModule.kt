@@ -12,8 +12,8 @@ val homeModule = module {
         HomeViewModel(
             movieRepository = get(),
             homeScreenMapper = get(),
-            selectedNewMovieCategory = MovieCategory.NOW_PLAYING,
-            selectedTrendingMovieCategory = MovieCategory.POPULAR
+            //selectedNewMovieCategory = MovieCategory.NOW_PLAYING,
+            //selectedTrendingMovieCategory = MovieCategory.POPULAR
         )
     }
     single<HomeScreenMapper> { HomeScreenMapperImpl() }

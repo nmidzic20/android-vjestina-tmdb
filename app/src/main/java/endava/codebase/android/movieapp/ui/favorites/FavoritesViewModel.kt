@@ -4,8 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import endava.codebase.android.movieapp.data.repository.MovieRepository
 import endava.codebase.android.movieapp.ui.favorites.mapper.FavoritesMapper
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class FavoritesViewModel(
@@ -13,21 +12,32 @@ class FavoritesViewModel(
     favoritesScreenMapper: FavoritesMapper,
 // other parameters if needed
 ) : ViewModel() {
-    private val _favoritesViewState = MutableStateFlow<FavoritesViewState>(
+    /*private val _favoritesViewState = MutableStateFlow<FavoritesViewState>(
         FavoritesViewState(
             emptyList()
         )
-    )
-    val favoritesViewState: StateFlow<FavoritesViewState> = _favoritesViewState
+    )*/
+    //OVAKO - maknuti inite i collectove u viewmodelima
+    val favoritesViewState: StateFlow<FavoritesViewState> =
+        movieRepository
+            .favoriteMovies()
+            .map { movies ->
+                favoritesScreenMapper.toFavoritesViewState(movies)
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(1000), //because of config change
+                initialValue = FavoritesViewState(emptyList()),
+            )
 
-    init {
+    /*init {
         viewModelScope.launch {
             movieRepository.favoriteMovies().collect { movies ->
                 val favoritesViewState = favoritesScreenMapper.toFavoritesViewState(movies)
                 _favoritesViewState.value = favoritesViewState
             }
         }
-    }
+    }*/
 
     fun onFavoriteClick(movieId: Int) {
         /*val favoriteMovies = _favoritesViewState.value.favoritesMovieViewStateList.toMutableList()

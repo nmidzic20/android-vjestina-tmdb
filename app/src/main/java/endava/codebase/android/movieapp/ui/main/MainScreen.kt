@@ -48,6 +48,8 @@ import endava.codebase.android.movieapp.ui.moviedetails.MovieDetailsViewModel
 import endava.codebase.android.movieapp.ui.theme.spacing
 import org.koin.androidx.compose.getViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.parameter.parametersOf
+
 // import org.koin.androidx.viewmodel.ext.android.viewModel
 
 // import org.koin.core.parameter.parametersOf
@@ -132,8 +134,13 @@ fun MainScreen() {
                     route = MovieDetailsDestination.route,
                     arguments = listOf(navArgument(MOVIE_ID_KEY) { type = NavType.IntType }),
                 ) {
-                    val selectedMovieId = it.arguments?.getInt(MOVIE_ID_KEY)
-                    val movieDetailsViewModel: MovieDetailsViewModel = getViewModel() // by viewModel { parametersOf(selectedMovieId) }
+                    val selectedMovieId = it.arguments?.getInt(MOVIE_ID_KEY) ?: throw IllegalStateException("Movie ID is null")
+                    val movieDetailsViewModel: MovieDetailsViewModel = getViewModel(parameters = {
+                        parametersOf(selectedMovieId)
+                    })
+                    // by viewModel {
+                        //parametersOf(selectedMovieId)
+                    //}
                     println("Selected movie ${it.arguments?.getInt(MOVIE_ID_KEY)}")
                     MovieDetailsRoute(
                         viewModel = movieDetailsViewModel
