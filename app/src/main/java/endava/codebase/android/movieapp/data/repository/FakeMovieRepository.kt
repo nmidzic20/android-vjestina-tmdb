@@ -61,13 +61,9 @@ class FakeMovieRepository(
         FavoritesDBMock.delete(movieId)
     }
     override suspend fun toggleFavorite(movieId: Int) {
-        println("MOVIEID " + movieId)
-        println("TO COMPARE " + FavoritesDBMock.favoriteIds.value)
         if (FavoritesDBMock.favoriteIds.value.contains(movieId)) {
-            println("Removing")
             removeMovieFromFavorites(movieId)
         } else {
-            println("Adding")
             addMovieToFavorites(movieId)
         }
     }

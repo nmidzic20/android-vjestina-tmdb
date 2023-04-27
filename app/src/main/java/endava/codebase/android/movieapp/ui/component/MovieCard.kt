@@ -70,12 +70,6 @@ private fun MovieCardPreview() {
     val movieCardViewState = remember { mutableStateOf(_movieCardViewState) }
 
     val onClick = { println("Movie card clicked") }
-    /*val onFavoriteClick = { movieFavorited: MovieCardViewState ->
-        movieCardViewState.value = MovieCardViewState(
-            movieFavorited.imageUrl,
-            !movieFavorited.isFavorite
-        )
-    }*/
 
     MovieCard(
         movieCardViewState.value,

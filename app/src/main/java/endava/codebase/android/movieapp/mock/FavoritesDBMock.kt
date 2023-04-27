@@ -12,19 +12,11 @@ object FavoritesDBMock {
     )
     val favoriteIds: StateFlow<Set<Int>> = _favoriteIds
 
-    init {
-        println(_favoriteIds.value + " javni " + favoriteIds.value)
-    }
-
     fun insert(movieId: Int) {
-        println("Insert before " + _favoriteIds.value)
         _favoriteIds.value = _favoriteIds.value + setOf(movieId)
-        println("Insert after " + _favoriteIds.value)
     }
 
     fun delete(movieId: Int) {
-        println("Delete before " + _favoriteIds.value)
         _favoriteIds.value = _favoriteIds.value.filter { id -> id != movieId }.toSet()
-        println("Delete after " + _favoriteIds.value)
     }
 }

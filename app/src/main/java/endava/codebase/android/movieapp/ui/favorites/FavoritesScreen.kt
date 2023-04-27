@@ -20,29 +20,11 @@ import endava.codebase.android.movieapp.R
 import endava.codebase.android.movieapp.ui.component.MovieCard
 import endava.codebase.android.movieapp.ui.theme.spacing
 
-// private val favoritesMapper: FavoritesMapper = FavoritesMapperImpl()
-// val favoritesViewState = favoritesMapper.toFavoritesViewState(MoviesMock.getMoviesList())
-
 @Composable
 fun FavoritesRoute(
     onNavigateToMovieDetails: (Int) -> Unit,
     viewModel: FavoritesViewModel
 ) {
-    // var favoritesViewState by remember { mutableStateOf(favoritesViewState) }
-
-    /*val onFavoriteClick = { index: Int ->
-        val favoriteMovies = favoritesViewState.favoritesMovieViewStateList.toMutableList()
-
-        favoriteMovies[index] = FavoritesMovieViewState(
-            id = favoriteMovies[index].id,
-            movieCardViewState = MovieCardViewState(
-                imageUrl = favoriteMovies[index].movieCardViewState.imageUrl,
-                isFavorite = !favoriteMovies[index].movieCardViewState.isFavorite
-            )
-        )
-        favoritesViewState = FavoritesViewState(favoriteMovies)
-    }*/
-
     val favoritesViewState: FavoritesViewState by viewModel.favoritesViewState.collectAsState()
 
     FavoritesScreen(
@@ -99,29 +81,4 @@ fun FavoritesScreen(
 @Preview
 @Composable
 fun FavoritesScreenPreview() {
-
-    /*var favoritesViewState by remember { mutableStateOf(favoritesViewState) }
-
-    val onMovieCardClick = { selectedId: Int -> println("Movie card $selectedId clicked") }
-
-    val onFavoriteClick = { index: Int ->
-        val favoriteMovies = favoritesViewState.favoritesMovieViewStateList.toMutableList()
-
-        favoriteMovies[index] = FavoritesMovieViewState(
-            id = favoriteMovies[index].id,
-            movieCardViewState = MovieCardViewState(
-                imageUrl = favoriteMovies[index].movieCardViewState.imageUrl,
-                isFavorite = !favoriteMovies[index].movieCardViewState.isFavorite
-            )
-        )
-        favoritesViewState = FavoritesViewState(favoriteMovies)
-    }
-
-    MovieAppTheme {
-        FavoritesScreen(
-            favoritesViewState,
-            onMovieCardClick,
-            onFavoriteClick,
-        )
-    }*/
 }

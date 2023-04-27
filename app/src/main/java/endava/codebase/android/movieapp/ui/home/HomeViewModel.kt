@@ -3,26 +3,24 @@ package endava.codebase.android.movieapp.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import endava.codebase.android.movieapp.data.repository.MovieRepository
-import endava.codebase.android.movieapp.mock.MoviesMock
-import endava.codebase.android.movieapp.model.Movie
 import endava.codebase.android.movieapp.model.MovieCategory
 import endava.codebase.android.movieapp.ui.component.MovieCategoryLabelViewState
 import endava.codebase.android.movieapp.ui.home.mapper.HomeScreenMapper
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val movieRepository: MovieRepository,
     homeScreenMapper: HomeScreenMapper,
-    //selectedTrendingMovieCategory: MovieCategory,
-    //selectedNewMovieCategory: MovieCategory,
-// other parameters if needed
 ) : ViewModel() {
 
     private val trendingMoviesCategorySelected = MutableStateFlow(MovieCategory.POPULAR)
     private val newMoviesCategorySelected = MutableStateFlow(MovieCategory.NOW_PLAYING)
-
-    //mutable state flow -> selectedTrending i selectedNew
 
     private val initialTrendingCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState(
         movieCategories = listOf(
@@ -41,9 +39,6 @@ class HomeViewModel(
         movies = emptyList()
     )
 
-   /* private val _trendingCategoryViewState = MutableStateFlow<HomeMovieCategoryViewState>(
-        initialTrendingCategoryViewState
-    )*/
     val trendingCategoryViewState: StateFlow<HomeMovieCategoryViewState> =
         trendingMoviesCategorySelected
             .flatMapLatest { selectedMovieCategory ->
@@ -64,61 +59,26 @@ class HomeViewModel(
                 initialValue = initialTrendingCategoryViewState,
             )
 
-        //_trendingCategoryViewState
-
-   /* private val _newReleasesCategory = MutableStateFlow<HomeMovieCategoryViewState>(
-        initialNewReleasesCategoryViewState
-    )*/
     val newReleasesCategory: StateFlow<HomeMovieCategoryViewState> =
         newMoviesCategorySelected
-        .flatMapLatest { selectedMovieCategory ->
-            movieRepository.newReleases(selectedMovieCategory)
-                .map { movies ->
-                    homeScreenMapper.toHomeMovieCategoryViewState(
-                        movieCategories = listOf(
-                            MovieCategory.NOW_PLAYING,
-                            MovieCategory.UPCOMING,
-                        ),
-                        selectedMovieCategory,
-                        movies
-                    )
-                }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(1000),
-            initialValue = initialNewReleasesCategoryViewState,
-        )
-        //_newReleasesCategory
-/*
-    init {
+            .flatMapLatest { selectedMovieCategory ->
+                movieRepository.newReleases(selectedMovieCategory)
+                    .map { movies ->
+                        homeScreenMapper.toHomeMovieCategoryViewState(
+                            movieCategories = listOf(
+                                MovieCategory.NOW_PLAYING,
+                                MovieCategory.UPCOMING,
+                            ),
+                            selectedMovieCategory,
+                            movies
+                        )
+                    }
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(1000),
+                initialValue = initialNewReleasesCategoryViewState,
+            )
 
-        //flatMapLatest
-        viewModelScope.launch {
-            movieRepository.trendingMovies(selectedTrendingMovieCategory).collect { movies ->
-                _trendingCategoryViewState.value = homeScreenMapper.toHomeMovieCategoryViewState(
-                    movieCategories = listOf(
-                        MovieCategory.POPULAR,
-                        MovieCategory.TOP_RATED,
-                    ),
-                    selectedTrendingMovieCategory,
-                    movies
-                )
-            }
-        }
-        viewModelScope.launch {
-            movieRepository.newReleases(selectedNewMovieCategory).collect { movies ->
-                _newReleasesCategory.value = homeScreenMapper.toHomeMovieCategoryViewState(
-                    movieCategories = listOf(
-                        MovieCategory.NOW_PLAYING,
-                        MovieCategory.UPCOMING,
-                    ),
-                    selectedNewMovieCategory,
-                    movies
-                )
-            }
-        }
-    }
-*/
     fun onFavoriteClick(movieId: Int) {
         viewModelScope.launch { movieRepository.toggleFavorite(movieId) }
     }
@@ -127,16 +87,6 @@ class HomeViewModel(
         when (selectedMovieCategory.itemId) {
             MovieCategory.POPULAR.ordinal -> {
                 trendingMoviesCategorySelected.value = MovieCategory.POPULAR
-                /*_trendingCategoryViewState.value = HomeMovieCategoryViewState(
-                    movieCategories = _trendingCategoryViewState.value.movieCategories.map { movieCategory ->
-                        MovieCategoryLabelViewState(
-                            movieCategory.itemId,
-                            selectedMovieCategory.itemId == movieCategory.itemId,
-                            movieCategory.categoryText
-                        )
-                    },
-                    movies = _trendingCategoryViewState.value.movies
-                )*/
             }
             MovieCategory.TOP_RATED.ordinal -> {
                 trendingMoviesCategorySelected.value = MovieCategory.TOP_RATED
@@ -146,16 +96,6 @@ class HomeViewModel(
             }
             MovieCategory.UPCOMING.ordinal -> {
                 newMoviesCategorySelected.value = MovieCategory.UPCOMING
-                /*_newReleasesCategory.value = HomeMovieCategoryViewState(
-                    movieCategories = _newReleasesCategory.value.movieCategories.map { movieCategory ->
-                        MovieCategoryLabelViewState(
-                            movieCategory.itemId,
-                            selectedMovieCategory.itemId == movieCategory.itemId,
-                            movieCategory.categoryText
-                        )
-                    },
-                    movies = _newReleasesCategory.value.movies
-                )*/
             }
         }
     }

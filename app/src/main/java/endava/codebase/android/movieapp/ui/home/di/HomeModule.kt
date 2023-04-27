@@ -1,6 +1,5 @@
 package endava.codebase.android.movieapp.ui.home.di
 
-import endava.codebase.android.movieapp.model.MovieCategory
 import endava.codebase.android.movieapp.ui.home.HomeViewModel
 import endava.codebase.android.movieapp.ui.home.mapper.HomeScreenMapper
 import endava.codebase.android.movieapp.ui.home.mapper.HomeScreenMapperImpl
@@ -12,8 +11,6 @@ val homeModule = module {
         HomeViewModel(
             movieRepository = get(),
             homeScreenMapper = get(),
-            //selectedNewMovieCategory = MovieCategory.NOW_PLAYING,
-            //selectedTrendingMovieCategory = MovieCategory.POPULAR
         )
     }
     single<HomeScreenMapper> { HomeScreenMapperImpl() }

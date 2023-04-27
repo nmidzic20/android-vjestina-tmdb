@@ -26,41 +26,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import endava.codebase.android.movieapp.R
-import endava.codebase.android.movieapp.mock.MoviesMock
 import endava.codebase.android.movieapp.ui.component.ActorCard
 import endava.codebase.android.movieapp.ui.component.CrewItem
 import endava.codebase.android.movieapp.ui.component.FavoriteButton
 import endava.codebase.android.movieapp.ui.component.UserScore
 import endava.codebase.android.movieapp.ui.component.UserScoreProgressBar
-import endava.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetailsMapper
-import endava.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetailsMapperImpl
 import endava.codebase.android.movieapp.ui.theme.spacing
-
-private val movieDetailsMapper: MovieDetailsMapper = MovieDetailsMapperImpl()
-val movieDetailsViewState = movieDetailsMapper.toMovieDetailsViewState(MoviesMock.getMovieDetails())
 
 @Composable
 fun MovieDetailsRoute(
     viewModel: MovieDetailsViewModel,
 ) {
-    /*var movieDetailsViewState by remember { mutableStateOf(movieDetailsViewState) }
-    val onFavoriteClick = {
-        movieDetailsViewState = MovieDetailsViewState(
-            id = movieDetailsViewState.id,
-            imageUrl = movieDetailsViewState.imageUrl,
-            voteAverage = movieDetailsViewState.voteAverage,
-            title = movieDetailsViewState.title,
-            overview = movieDetailsViewState.overview,
-            isFavorite = !movieDetailsViewState.isFavorite,
-            crew = movieDetailsViewState.crew,
-            cast = movieDetailsViewState.cast
-        )
-    }*/
     val movieDetailsViewState: MovieDetailsViewState by viewModel.movieDetailsViewState.collectAsState()
 
     MovieDetailsScreen(
@@ -264,31 +244,4 @@ fun TopBilledCast(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun MovieDetailsScreenPreview() {
-/*
-    var movieDetailsViewState by remember { mutableStateOf(movieDetailsViewState) }
-    val onFavoriteClick = {
-        movieDetailsViewState = MovieDetailsViewState(
-            id = movieDetailsViewState.id,
-            imageUrl = movieDetailsViewState.imageUrl,
-            voteAverage = movieDetailsViewState.voteAverage,
-            title = movieDetailsViewState.title,
-            overview = movieDetailsViewState.overview,
-            isFavorite = !movieDetailsViewState.isFavorite,
-            crew = movieDetailsViewState.crew,
-            cast = movieDetailsViewState.cast
-        )
-    }
-
-    MovieAppTheme {
-        MovieDetailsScreen(
-            movieDetailsViewState,
-            onFavoriteClick,
-        )
-    }
-    */
 }

@@ -4,20 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import endava.codebase.android.movieapp.data.repository.MovieRepository
 import endava.codebase.android.movieapp.ui.favorites.mapper.FavoritesMapper
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class FavoritesViewModel(
     private val movieRepository: MovieRepository,
     favoritesScreenMapper: FavoritesMapper,
-// other parameters if needed
 ) : ViewModel() {
-    /*private val _favoritesViewState = MutableStateFlow<FavoritesViewState>(
-        FavoritesViewState(
-            emptyList()
-        )
-    )*/
-    //OVAKO - maknuti inite i collectove u viewmodelima
+
     val favoritesViewState: StateFlow<FavoritesViewState> =
         movieRepository
             .favoriteMovies()
@@ -26,29 +23,11 @@ class FavoritesViewModel(
             }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(1000), //because of config change
+                started = SharingStarted.WhileSubscribed(1000),
                 initialValue = FavoritesViewState(emptyList()),
             )
 
-    /*init {
-        viewModelScope.launch {
-            movieRepository.favoriteMovies().collect { movies ->
-                val favoritesViewState = favoritesScreenMapper.toFavoritesViewState(movies)
-                _favoritesViewState.value = favoritesViewState
-            }
-        }
-    }*/
-
     fun onFavoriteClick(movieId: Int) {
-        /*val favoriteMovies = _favoritesViewState.value.favoritesMovieViewStateList.toMutableList()
-
-        favoriteMovies[movieId] = FavoritesMovieViewState(
-            id = favoriteMovies[movieId].id,
-            movieCardViewState = MovieCardViewState(
-                imageUrl = favoriteMovies[movieId].movieCardViewState.imageUrl,
-                isFavorite = !favoriteMovies[movieId].movieCardViewState.isFavorite
-            )
-        )*/
         viewModelScope.launch { movieRepository.toggleFavorite(movieId) }
     }
 }

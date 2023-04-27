@@ -6,17 +6,19 @@ import endava.codebase.android.movieapp.data.repository.MovieRepository
 import endava.codebase.android.movieapp.mock.MoviesMock
 import endava.codebase.android.movieapp.ui.component.ActorCardViewState
 import endava.codebase.android.movieapp.ui.component.CrewItemViewState
-import endava.codebase.android.movieapp.ui.favorites.FavoritesViewState
 import endava.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetailsMapper
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class MovieDetailsViewModel(
     private val movieId: Int,
     private val movieRepository: MovieRepository,
     movieDetailsMapper: MovieDetailsMapper,
-// other parameters if needed
 ) : ViewModel() {
+
     private val movieDetails = MoviesMock.getMovieDetails()
     private val initialMovieDetailsViewState = MovieDetailsViewState(
         id = movieDetails.movie.id,
@@ -45,9 +47,7 @@ class MovieDetailsViewModel(
             )
         }
     )
-    /*private val _movieDetailsViewState = MutableStateFlow<MovieDetailsViewState>(
-        initialMovieDetailsViewState
-    )*/
+
     val movieDetailsViewState: StateFlow<MovieDetailsViewState> =
         movieRepository
             .movieDetails(movieId)
@@ -59,14 +59,6 @@ class MovieDetailsViewModel(
                 started = SharingStarted.WhileSubscribed(1000),
                 initialValue = initialMovieDetailsViewState,
             )
-
-    /*init {
-        viewModelScope.launch {
-            movieRepository.movieDetails(movieId).collect { movieDetails ->
-                _movieDetailsViewState.value = movieDetailsMapper.toMovieDetailsViewState(movieDetails)
-            }
-        }
-    }*/
 
     fun onFavoriteClick(movieId: Int) {
         viewModelScope.launch { movieRepository.toggleFavorite(movieId) }
