@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.withContext
 
 class FakeMovieRepository(
     private val ioDispatcher: CoroutineDispatcher,
@@ -32,22 +33,8 @@ class FakeMovieRepository(
         FavoritesDBMock.favoriteIds
             .mapLatest { favoriteIds ->
                 val movieDetails = MoviesMock.getMovieDetails(movieId)
-                val movie = Movie(
-                    id = movieDetails.movie.id,
-                    title = movieDetails.movie.title,
-                    overview = movieDetails.movie.overview,
-                    imageUrl = movieDetails.movie.imageUrl,
-                    isFavorite = movieDetails.movie.id in favoriteIds
-                )
-                MovieDetails(
-                    movie = movie,
-                    voteAverage = movieDetails.voteAverage,
-                    releaseDate = movieDetails.releaseDate,
-                    language = movieDetails.language,
-                    runtime = movieDetails.runtime,
-                    crew = movieDetails.crew,
-                    cast = movieDetails.cast
-                )
+                val updatedMovie = movieDetails.movie.copy(isFavorite = favoriteIds.contains(movieId))
+                movieDetails.copy(movie = updatedMovie)
             }
             .flowOn(ioDispatcher)
 
@@ -61,10 +48,12 @@ class FakeMovieRepository(
         FavoritesDBMock.delete(movieId)
     }
     override suspend fun toggleFavorite(movieId: Int) {
-        if (FavoritesDBMock.favoriteIds.value.contains(movieId)) {
-            removeMovieFromFavorites(movieId)
-        } else {
-            addMovieToFavorites(movieId)
+        withContext(ioDispatcher) {
+            if (FavoritesDBMock.favoriteIds.value.contains(movieId)) {
+                removeMovieFromFavorites(movieId)
+            } else {
+                addMovieToFavorites(movieId)
+            }
         }
     }
 }
