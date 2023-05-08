@@ -42,7 +42,7 @@ class HomeViewModel(
     val trendingCategoryViewState: StateFlow<HomeMovieCategoryViewState> =
         trendingMoviesCategorySelected
             .flatMapLatest { selectedMovieCategory ->
-                movieRepository.trendingMovies(selectedMovieCategory)
+                movieRepository.movies(selectedMovieCategory)
                     .map { movies ->
                         homeScreenMapper.toHomeMovieCategoryViewState(
                             movieCategories = listOf(
@@ -62,7 +62,7 @@ class HomeViewModel(
     val newReleasesCategory: StateFlow<HomeMovieCategoryViewState> =
         newMoviesCategorySelected
             .flatMapLatest { selectedMovieCategory ->
-                movieRepository.newReleases(selectedMovieCategory)
+                movieRepository.movies(selectedMovieCategory)
                     .map { movies ->
                         homeScreenMapper.toHomeMovieCategoryViewState(
                             movieCategories = listOf(
