@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -40,9 +41,13 @@ import endava.codebase.android.movieapp.navigation.MOVIE_ID_KEY
 import endava.codebase.android.movieapp.navigation.MovieDetailsDestination
 import endava.codebase.android.movieapp.navigation.NavigationItem
 import endava.codebase.android.movieapp.ui.favorites.FavoritesRoute
+import endava.codebase.android.movieapp.ui.favorites.FavoritesViewModel
 import endava.codebase.android.movieapp.ui.favorites.HomeRoute
 import endava.codebase.android.movieapp.ui.moviedetails.MovieDetailsRoute
+import endava.codebase.android.movieapp.ui.moviedetails.MovieDetailsViewModel
 import endava.codebase.android.movieapp.ui.theme.spacing
+import org.koin.androidx.compose.getViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MainScreen() {
@@ -106,6 +111,7 @@ fun MainScreen() {
                             val movieRoute = MovieDetailsDestination.createNavigationRoute(movieId)
                             navController.navigate(movieRoute)
                         },
+                        viewModel = getViewModel()
                     )
                 }
                 composable(NavigationItem.FavoritesDestination.route) {
@@ -114,13 +120,20 @@ fun MainScreen() {
                             val movieRoute = MovieDetailsDestination.createNavigationRoute(movieId)
                             navController.navigate(movieRoute)
                         },
+                        viewModel = getViewModel<FavoritesViewModel>()
                     )
                 }
                 composable(
                     route = MovieDetailsDestination.route,
                     arguments = listOf(navArgument(MOVIE_ID_KEY) { type = NavType.IntType }),
                 ) {
-                    MovieDetailsRoute()
+                    val selectedMovieId = it.arguments?.getInt(MOVIE_ID_KEY) ?: throw IllegalStateException("Movie ID is null")
+                    val movieDetailsViewModel: MovieDetailsViewModel = getViewModel(parameters = {
+                        parametersOf(selectedMovieId)
+                    })
+                    MovieDetailsRoute(
+                        viewModel = movieDetailsViewModel
+                    )
                 }
             }
         }
