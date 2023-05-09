@@ -28,6 +28,8 @@ val networkModule = module {
                 json(Json {
                     prettyPrint = true
                     isLenient = true
+                    ignoreUnknownKeys = true
+                    encodeDefaults = false
                 })
             }
         }
