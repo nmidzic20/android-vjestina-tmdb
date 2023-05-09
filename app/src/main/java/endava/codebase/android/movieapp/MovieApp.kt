@@ -18,8 +18,8 @@ class MovieApp : Application() {
         startKoin {
             androidContext(this@MovieApp)
             modules(
-                dataModule,
                 databaseModule,
+                dataModule,
                 networkModule,
                 favoritesModule,
                 movieDetailsModule,
@@ -29,5 +29,4 @@ class MovieApp : Application() {
 
         Log.d("MovieApp", "App started")
     }
-
 }

@@ -8,18 +8,27 @@ import endava.codebase.android.movieapp.model.MovieCategory
 import endava.codebase.android.movieapp.model.MovieDetails
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.withContext
 
 class MovieRepositoryImpl(
     private val movieService: MovieService,
-    private val movieDao : FavoriteMovieDAO,
+    private val movieDao: FavoriteMovieDAO,
     private val bgDispatcher: CoroutineDispatcher
 ) : MovieRepository {
 
     private val moviesByCategory: Map<MovieCategory, Flow<List<Movie>>> = MovieCategory.values()
-        .associateWith {movieCategory ->
+        .associateWith { movieCategory ->
             flow {
                 val movieResponse = when (movieCategory) {
+
                     MovieCategory.POPULAR -> movieService.fetchPopularMovies()
                     MovieCategory.UPCOMING -> movieService.fetchUpcomingMovies()
                     MovieCategory.NOW_PLAYING -> movieService.fetchNowPlayingMovies()
@@ -30,7 +39,7 @@ class MovieRepositoryImpl(
                 movieDao.favorites()
                     .map { favoriteMovies ->
                         apiMovies.map { apiMovie ->
-                            apiMovie.toMovie(isFavorite = favoriteMovies.any{ it.id == apiMovie.id })
+                            apiMovie.toMovie(isFavorite = favoriteMovies.any { it.id == apiMovie.id })
                         }
                     }
             }.shareIn(
@@ -38,11 +47,10 @@ class MovieRepositoryImpl(
                 started = SharingStarted.WhileSubscribed(1000L),
                 replay = 1,
             )
-
         }
 
     private val favorites = movieDao.favorites().map {
-        it.map { dbFavoriteMovie ->  
+        it.map { dbFavoriteMovie ->
             Movie(
                 id = dbFavoriteMovie.id,
                 imageUrl = dbFavoriteMovie.posterUrl,
@@ -65,7 +73,7 @@ class MovieRepositoryImpl(
         movieDao.favorites()
             .map { favoriteMovies ->
                 apiMoviesDetails.toMovieDetails(
-                    isFavorite = favoriteMovies.any{ it.id == apiMoviesDetails.id },
+                    isFavorite = favoriteMovies.any { it.id == apiMoviesDetails.id },
                     crew = apiMovieCredits.crew.map { crewman -> crewman.toCrewman() },
                     cast = apiMovieCredits.cast.map { actor -> actor.toActor() },
                 )
@@ -75,15 +83,21 @@ class MovieRepositoryImpl(
     override fun favoriteMovies(): Flow<List<Movie>> = favorites
 
     override suspend fun addMovieToFavorites(movieId: Int) {
-        val movie = DbFavoriteMovie(movieId, "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg")
-        movieDao.insertFavoriteMovies(movie)
+        val movieDetails = movieDetails(movieId).first()
+        val posterUrl = movieDetails.movie.imageUrl.orEmpty()
+        movieDao.insertFavoriteMovies(DbFavoriteMovie(movieId, posterUrl))
     }
 
-    override suspend fun removeMovieFromFavorites(movieId: Int) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun removeMovieFromFavorites(movieId: Int) =
+        movieDao.deleteFavoriteMovies(DbFavoriteMovie(movieId, ""))
 
     override suspend fun toggleFavorite(movieId: Int) {
-        TODO("Not yet implemented")
+        val favoriteMovies = favorites.first()
+        withContext(bgDispatcher) {
+            if (favoriteMovies.none { it.id == movieId })
+                addMovieToFavorites(movieId)
+            else
+                removeMovieFromFavorites(movieId)
+        }
     }
 }
