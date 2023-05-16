@@ -6,8 +6,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import endava.codebase.android.movieapp.mock.MoviesMock
 
 data class CrewItemViewState(
     val name: String,
@@ -32,11 +30,4 @@ fun CrewItem(
             color = MaterialTheme.colors.onBackground,
         )
     }
-}
-
-@Preview
-@Composable
-private fun CrewItemPreview() {
-    val crewman = MoviesMock.getCrewman()
-    CrewItem(CrewItemViewState(crewman.name, crewman.job))
 }

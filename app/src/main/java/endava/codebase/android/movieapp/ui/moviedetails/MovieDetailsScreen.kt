@@ -70,7 +70,8 @@ fun MovieDetailsScreen(
         )
         Crew(
             movieDetailsViewState,
-            Modifier.padding(MaterialTheme.spacing.medium)
+            Modifier
+                .padding(MaterialTheme.spacing.medium)
         )
         TopBilledCast(
             movieDetailsViewState,
@@ -192,7 +193,9 @@ fun Crew(
                 crewmanViewStateList.getOrNull(i)?.let {
                     CrewItem(
                         it.crewItemViewState,
-                        Modifier.padding(MaterialTheme.spacing.small)
+                        Modifier
+                            .weight(0.33f)
+                            .padding(MaterialTheme.spacing.small)
                     )
                 }
             }
@@ -202,7 +205,9 @@ fun Crew(
                 crewmanViewStateList.getOrNull(i)?.let {
                     CrewItem(
                         it.crewItemViewState,
-                        Modifier.padding(MaterialTheme.spacing.small)
+                        Modifier
+                            .weight(0.33f)
+                            .padding(MaterialTheme.spacing.small)
                     )
                 }
             }
