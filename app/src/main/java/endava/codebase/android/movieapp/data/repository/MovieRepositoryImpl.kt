@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.withContext
 
 class MovieRepositoryImpl(
     private val movieService: MovieService,
@@ -85,19 +84,17 @@ class MovieRepositoryImpl(
     override suspend fun addMovieToFavorites(movieId: Int) {
         val movieDetails = movieDetails(movieId).first()
         val posterUrl = movieDetails.movie.imageUrl.orEmpty()
-        movieDao.insertFavoriteMovies(DbFavoriteMovie(movieId, posterUrl))
+        movieDao.insertFavoriteMovie(DbFavoriteMovie(movieId, posterUrl))
     }
 
     override suspend fun removeMovieFromFavorites(movieId: Int) =
-        movieDao.deleteFavoriteMovies(DbFavoriteMovie(movieId, ""))
+        movieDao.deleteFavoriteMovie(movieId)
 
     override suspend fun toggleFavorite(movieId: Int) {
         val favoriteMovies = favorites.first()
-        withContext(bgDispatcher) {
-            if (favoriteMovies.none { it.id == movieId })
-                addMovieToFavorites(movieId)
-            else
-                removeMovieFromFavorites(movieId)
-        }
+        if (favoriteMovies.none { it.id == movieId })
+            addMovieToFavorites(movieId)
+        else
+            removeMovieFromFavorites(movieId)
     }
 }

@@ -1,7 +1,6 @@
 package endava.codebase.android.movieapp.data.database
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -13,8 +12,8 @@ interface FavoriteMovieDAO {
     fun favorites(): Flow<List<DbFavoriteMovie>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertFavoriteMovies(vararg movies: DbFavoriteMovie)
+    suspend fun insertFavoriteMovie(movie: DbFavoriteMovie)
 
-    @Delete
-    fun deleteFavoriteMovies(vararg movies: DbFavoriteMovie)
+    @Query("DELETE FROM favorite_movie WHERE id = :movieId")
+    suspend fun deleteFavoriteMovie(movieId: Int)
 }
